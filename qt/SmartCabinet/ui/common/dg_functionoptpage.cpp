@@ -22,8 +22,7 @@ Dg_FunctionOptPage::Dg_FunctionOptPage(QWidget *parent) :
 #ifndef TEST
     this->showFullScreen();
 #endif
-//      showMaximized();
-//      setWindowFlags(Qt::FramelessWindowHint);
+
     Auto_freshen();
 
 }

@@ -70,8 +70,7 @@ Dg_ExecTakeIn::Dg_ExecTakeIn(QWidget *parent) :
 #ifndef TEST
     this->showFullScreen();
 #endif
-    //      showMaximized();
-    //      setWindowFlags(Qt::FramelessWindowHint);
+
 
     SetTitle("入柜");
     //执行程序

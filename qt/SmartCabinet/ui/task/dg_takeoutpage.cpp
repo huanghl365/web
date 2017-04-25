@@ -15,7 +15,8 @@ Dg_TakeOutPage::Dg_TakeOutPage(QWidget *parent) :
     updateSQL = new UpdateSQL(this);
 
 #ifndef TEST
-    this->showFullScreen();
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    showMaximized();
 #endif
 //      showMaximized();
 //      setWindowFlags(Qt::FramelessWindowHint);

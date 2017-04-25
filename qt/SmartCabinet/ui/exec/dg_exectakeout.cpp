@@ -27,8 +27,7 @@ Dg_ExecTakeOut::Dg_ExecTakeOut(QWidget *parent) :
 #ifndef TEST
     this->showFullScreen();
 #endif
-    //      showMaximized();
-    //      setWindowFlags(Qt::FramelessWindowHint);
+
 
     //变量初始化
     InitializeStruct();

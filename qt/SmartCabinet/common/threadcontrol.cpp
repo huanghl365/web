@@ -12,22 +12,22 @@ ThreadControl::ThreadControl(QObject *parent) :
 
 void ThreadControl::ControlTimerThread(int order)
 {
-    if (CLOSE_THREAD == order)
-    {
-        timerThread->wait(ULONG_MAX);
-    }
-    else if (OPEN_THREAD == order)
-    {
-        timerThread->start();
-    }
+//    if (CLOSE_THREAD == order)
+//    {
+//        timerThread->wait(ULONG_MAX);
+//    }
+//    else if (OPEN_THREAD == order)
+//    {
+//        timerThread->start();
+//    }
 
-    if (!timerThread->isRunning())
-    {
-        qDebug()<<"timerThread running fail ";
-    }
+//    if (!timerThread->isRunning())
+//    {
+//        qDebug()<<"timerThread running fail ";
+//    }
 }
 
 void ThreadControl::CreateThread()
 {
-    TC_timerUpdate->moveToThread(timerThread);
+//    TC_timerUpdate->moveToThread(timerThread);
 }

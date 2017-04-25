@@ -15,10 +15,11 @@ Dg_LoginPage::Dg_LoginPage(QWidget *parent) :
     is_open = false;
     netWork = new NetCommunication(this);
 #ifndef TEST
-    this->showFullScreen();
+      setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+      showMaximized();
+
 #endif
-//      showMaximized();
-//      setWindowFlags(Qt::FramelessWindowHint);
+
 }
 
 Dg_LoginPage::~Dg_LoginPage()

@@ -77,7 +77,7 @@ void Initprocess::OpenKey()
 //    frmInputNew::Instance()->init("bottom", "black", 12, 10, 700, 230, 20, 20, 6, 45);
 }
 
-void Initprocess::Upgrade()
+bool Initprocess::Upgrade()
 {
     NetCommunication *network = new NetCommunication;
     QString armVersion = "";
@@ -93,9 +93,11 @@ void Initprocess::Upgrade()
                 QProcess *proe = new QProcess;
                 proe->startDetached("./untitled4");
                 this->deleteLater();
+                return false;
             }
         }
     }
+    return true;
 }
 
 bool Initprocess::UnpackVersion(QJsonDocument jd , QString *armVersion, QString *armUrl)

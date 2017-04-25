@@ -23,7 +23,7 @@ public:
     void OpenSerialPort();
     void CreateThread();
     void StartThread();
-    void Upgrade();
+    bool Upgrade();
     void ShowLoginPage();
     void OpenKey();
 

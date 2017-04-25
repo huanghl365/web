@@ -18,7 +18,8 @@ Dg_TakeIn::Dg_TakeIn(QWidget *parent) :
     selectRow = 0;
 
 #ifndef TEST
-    this->showFullScreen();
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    showMaximized();
 #endif
 //      showMaximized();
 //      setWindowFlags(Qt::FramelessWindowHint);

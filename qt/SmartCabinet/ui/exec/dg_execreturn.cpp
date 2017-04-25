@@ -66,7 +66,8 @@ Dg_ExecReturn::Dg_ExecReturn(QWidget *parent) :
 
 
 #ifndef TEST
-    this->showFullScreen();
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    showMaximized();
 #endif   //      showMaximized();
     //      setWindowFlags(Qt::FramelessWindowHint);
 
