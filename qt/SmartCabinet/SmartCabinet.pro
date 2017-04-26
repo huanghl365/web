@@ -79,4 +79,8 @@ FORMS    += \
 RESOURCES += \
     resource/resoure.qrc
 
-include($$PWD/inputnew/inputnew.pri)
+
+target.path = /home/pi/test
+INSTALLS += target
+
+#include($$PWD/inputnew/inputnew.pri)

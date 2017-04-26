@@ -88,7 +88,7 @@ bool Initprocess::Upgrade()
     {
         if (UnpackVersion(network->ServerReply, &armVersion, &armUrl))
         {
-            if(armVersion != VERSION);
+            if(armVersion != VERSION)
             {
                 QProcess *proe = new QProcess;
                 proe->startDetached("./untitled4");

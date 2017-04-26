@@ -17,15 +17,15 @@ int main(int argc, char *argv[])
 
     initStartProgress.CreateSql();
     initStartProgress.ReadConfig();
-    initStartProgress.Upgrade();
-//    initStartProgress.CreateThread();
-//    initStartProgress.StartThread();
-//    initStartProgress.OpenSerialPort();
-//    initStartProgress.UpdateLocalSql();
-//    initStartProgress.ShowLoginPage();
-//    initStartProgress.OpenKey();
-
-
+    if (initStartProgress.Upgrade())
+    {
+        initStartProgress.CreateThread();
+        initStartProgress.StartThread();
+        initStartProgress.OpenSerialPort();
+        initStartProgress.UpdateLocalSql();
+        initStartProgress.ShowLoginPage();
+        initStartProgress.OpenKey();        
+    }
 
     a.connect(&initStartProgress, SIGNAL(destroyed()), &a, SLOT(quit()));
     return a.exec();

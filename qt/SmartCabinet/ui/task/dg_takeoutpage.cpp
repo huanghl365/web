@@ -18,8 +18,7 @@ Dg_TakeOutPage::Dg_TakeOutPage(QWidget *parent) :
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     showMaximized();
 #endif
-//      showMaximized();
-//      setWindowFlags(Qt::FramelessWindowHint);
+
     table_exec = "T_AgentiaExecute";
     table_sea = "T_AgentiaSaving";
 

@@ -25,7 +25,7 @@ static bool createConnection()
        QSqlQuery query;
 
        query.exec(QString("create table T_Version ([versionNo] varchar, [cabinetID] varchar)"));
-       query.exec(QString("insert into T_Version values ('0.0.0','AABBCCDD')"));
+       query.exec(QString("insert into T_Version values ('1.0.0','AABBCCDD')"));
 
        query.exec(QString("create table T_temporary ([versionNo] varchar, [address] varchar)"));
 
