@@ -1,9 +1,9 @@
 #ifndef DG_CHECKPAGE_H
 #define DG_CHECKPAGE_H
 
-#include "ui/task/dg_takeoutpage.h"
+#include "ui/task/dg_taskclass.h"
 
-class Dg_CheckPage : public Dg_TakeOutPage
+class Dg_CheckPage : public Dg_TaskClass
 {
     Q_OBJECT
 public:

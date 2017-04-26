@@ -28,12 +28,16 @@ private slots:
 
     void on_pB_takeIn_clicked();
 
+signals:
+    void KillProgram();
+
 private:
     Ui::Dg_FunctionOptPage *ui;
     QTimer *timer;
     void UpGUI(int order);
     void ClosePage();
     void mousePressEvent(QMouseEvent *event);
+    void waitTime(int time);
 };
 
 #endif // DG_FUNCTIONOPTPAGE_H

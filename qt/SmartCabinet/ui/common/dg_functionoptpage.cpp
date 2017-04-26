@@ -7,6 +7,8 @@
 #include "ui/task/dg_takein.h"
 #include <QTimer>
 #include <QDebug>
+#include <QElapsedTimer>
+#include <QCoreApplication>
 
 
 Dg_FunctionOptPage::Dg_FunctionOptPage(QWidget *parent) :
@@ -34,6 +36,7 @@ Dg_FunctionOptPage::~Dg_FunctionOptPage()
 
 void Dg_FunctionOptPage::on_pB_quit_clicked()
 {
+    emit KillProgram();
     this->deleteLater();
 }
 
@@ -130,6 +133,7 @@ void Dg_FunctionOptPage::mousePressEvent(QMouseEvent *event)
 void Dg_FunctionOptPage::ClosePage()
 {
     this->hide();
+    waitTime(2000);//delay
     timer->stop();
 }
 
@@ -141,42 +145,55 @@ void Dg_FunctionOptPage::ShowFunctionPage()
 
 void Dg_FunctionOptPage::on_pB_takeOut_clicked()
 {
-    Dg_TakeOutPage *task_TakeOut = new Dg_TakeOutPage(this);
-
-    task_TakeOut->table_exec = "T_AgentiaExecute";
-    task_TakeOut->table_sea = "T_AgentiaSaving";
+    Dg_TakeOutPage *task_TakeOut = new Dg_TakeOutPage;
 
     task_TakeOut->show();
     ClosePage();
     connect(task_TakeOut, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
     connect(task_TakeOut, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(this, SIGNAL(KillProgram()), task_TakeOut, SLOT(deleteLater()));
 }
 
 
 void Dg_FunctionOptPage::on_pB_return_clicked()
 {
-    Dg_ReturnPage *task_Return = new Dg_ReturnPage(this);
+    Dg_ReturnPage *task_Return = new Dg_ReturnPage;
     task_Return->show();
     ClosePage();
     connect(task_Return, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
     connect(task_Return, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(this, SIGNAL(KillProgram()), task_Return, SLOT(deleteLater()));
+
 }
 
 void Dg_FunctionOptPage::on_pB_check_clicked()
 {
-    Dg_CheckPage *task_Check = new Dg_CheckPage(this);
+    Dg_CheckPage *task_Check = new Dg_CheckPage;
     task_Check->show();
     ClosePage();
     connect(task_Check, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
-    connect(task_Check, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(task_Check, SIGNAL(destroyed()), timer, SLOT(start()));    
+    connect(this, SIGNAL(KillProgram()), task_Check, SLOT(deleteLater()));
+
 }
 
 void Dg_FunctionOptPage::on_pB_takeIn_clicked()
 {
-    Dg_TakeIn *task_takeIn = new Dg_TakeIn(this);
-
+    Dg_TakeIn *task_takeIn = new Dg_TakeIn;
     task_takeIn->show();
     ClosePage();
     connect(task_takeIn, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
     connect(task_takeIn, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(this, SIGNAL(KillProgram()), task_takeIn, SLOT(deleteLater()));
+
+}
+
+void Dg_FunctionOptPage::waitTime(int time)
+{
+    QElapsedTimer t;
+    t.start();
+    while(t.elapsed()<time)
+    {
+        QCoreApplication::processEvents();
+    }
 }

@@ -122,8 +122,8 @@ void Dg_LoginPage::ShowLoginPage()
     this->show();
     is_open = false;
 
-    ui->lE_passwd->clear();
-    ui->lE_account->clear();
+//    ui->lE_passwd->clear();
+//    ui->lE_account->clear();
 }
 
 bool Dg_LoginPage::QuerySQL(const QString &account, const QString &passwd, int &user_Id, int &user_role)

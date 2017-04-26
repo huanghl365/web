@@ -5,7 +5,7 @@
 #include <QDebug>
 
 Dg_CheckPage::Dg_CheckPage(QWidget *parent) :
-    Dg_TakeOutPage(parent)
+    Dg_TaskClass(parent)
 {
     SetTitle("点验操作");
     DownLoad_TaskList();

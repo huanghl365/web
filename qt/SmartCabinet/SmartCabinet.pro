@@ -32,12 +32,13 @@ SOURCES += main.cpp \
     ui/task/dg_returnpage.cpp \
     ui/exec/dg_exectakeout.cpp \
     ui/exec/dg_execreturn.cpp \
-    ui/task/dg_takeoutpage.cpp \
     ui/task/dg_checkpage.cpp \
     ui/exec/dg_execcheck.cpp \
     ui/common/dg_requestposition.cpp \
     ui/task/dg_takein.cpp \
-    ui/exec/dg_exectakein.cpp
+    ui/exec/dg_exectakein.cpp \
+    ui/task/dg_taskclass.cpp \
+    ui/task/dg_takeoutpage.cpp
 
 HEADERS  += \
     ui/common/dg_loginpage.h \
@@ -57,12 +58,13 @@ HEADERS  += \
     ui/task/dg_returnpage.h \
     ui/exec/dg_exectakeout.h \
     ui/exec/dg_execreturn.h \
-    ui/task/dg_takeoutpage.h \
     ui/task/dg_checkpage.h \
     ui/exec/dg_execcheck.h \
     ui/common/dg_requestposition.h \
     ui/task/dg_takein.h \
-    ui/exec/dg_exectakein.h
+    ui/exec/dg_exectakein.h \
+    ui/task/dg_taskclass.h \
+    ui/task/dg_takeoutpage.h
 
 FORMS    += \
     ui/common/dg_loginpage.ui \
@@ -70,11 +72,11 @@ FORMS    += \
     ui/task/dg_returnpage.ui \
     ui/exec/dg_exectakeout.ui \
     ui/exec/dg_execreturn.ui \
-    ui/task/dg_takeoutpage.ui \
     ui/exec/dg_execcheck.ui \
     ui/common/dg_requestposition.ui \
     ui/task/dg_takein.ui \
-    ui/exec/dg_exectakein.ui
+    ui/exec/dg_exectakein.ui \
+    ui/task/dg_taskclass.ui
 
 RESOURCES += \
     resource/resoure.qrc

@@ -91,8 +91,8 @@
         <widget class="QGroupBox" name="groupBox">
          <property name="font">
           <font>
-           <family>Agency FB</family>
-           <pointsize>20</pointsize>
+           <family>Sans Serif</family>
+           <pointsize>12</pointsize>
           </font>
          </property>
          <property name="title">
@@ -103,7 +103,7 @@
            <number>0</number>
           </property>
           <property name="topMargin">
-           <number>0</number>
+           <number>9</number>
           </property>
           <property name="rightMargin">
            <number>0</number>
@@ -227,7 +227,7 @@
         <widget class="QGroupBox" name="groupBox_2">
          <property name="font">
           <font>
-           <family>Agency FB</family>
+           <family>Sans Serif</family>
            <pointsize>12</pointsize>
           </font>
          </property>
@@ -239,7 +239,7 @@
            <number>0</number>
           </property>
           <property name="topMargin">
-           <number>0</number>
+           <number>9</number>
           </property>
           <property name="rightMargin">
            <number>0</number>
@@ -251,7 +251,13 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QTextBrowser" name="textB_message"/>
+           <widget class="QTextBrowser" name="textB_message">
+            <property name="font">
+             <font>
+              <pointsize>10</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
