@@ -10,6 +10,9 @@ class Dg_TakeOutPage : public Dg_TaskClass
 
 public:
     Dg_TakeOutPage();
+
+private:
+    void DownLoad_TaskList();
 };
 
 #endif // DG_TAKEOUTPAGE_H

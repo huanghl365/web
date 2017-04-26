@@ -1,4 +1,5 @@
 #include "dg_takeoutpage.h"
+#include <QDebug>
 
 Dg_TakeOutPage::Dg_TakeOutPage()
 {
@@ -11,3 +12,8 @@ Dg_TakeOutPage::Dg_TakeOutPage()
     ShowSQL();
 }
 
+
+void Dg_TakeOutPage::DownLoad_TaskList()
+{
+    qDebug() << "takeout";
+}

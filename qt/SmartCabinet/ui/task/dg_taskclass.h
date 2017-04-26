@@ -41,7 +41,7 @@ protected:
     void Del(QTableWidget *source);
     void ShowUI();
     void ShowSQL();
-    void DownLoad_TaskList();
+    virtual void DownLoad_TaskList();
     void SortAscend();
     void mousePressEvent(QMouseEvent *event);
     void CleanSQLTable(QString name);

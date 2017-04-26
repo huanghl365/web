@@ -38,7 +38,10 @@ SOURCES += main.cpp \
     ui/task/dg_takein.cpp \
     ui/exec/dg_exectakein.cpp \
     ui/task/dg_taskclass.cpp \
-    ui/task/dg_takeoutpage.cpp
+    ui/task/dg_takeoutpage.cpp \
+    ui/task/dg_scrap.cpp \
+    ui/task/dg_replace.cpp \
+    ui/task/dg_remove.cpp
 
 HEADERS  += \
     ui/common/dg_loginpage.h \
@@ -64,7 +67,10 @@ HEADERS  += \
     ui/task/dg_takein.h \
     ui/exec/dg_exectakein.h \
     ui/task/dg_taskclass.h \
-    ui/task/dg_takeoutpage.h
+    ui/task/dg_takeoutpage.h \
+    ui/task/dg_scrap.h \
+    ui/task/dg_replace.h \
+    ui/task/dg_remove.h
 
 FORMS    += \
     ui/common/dg_loginpage.ui \

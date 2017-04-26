@@ -12,25 +12,20 @@ Dg_TaskClass::Dg_TaskClass(QWidget *parent) :
     ui(new Ui::Dg_TaskClass)
 {
     ui->setupUi(this);
-    commonModel = new CommonModel(this);
-    updateSQL = new UpdateSQL(this);
+    commonModel = new CommonModel;
+    updateSQL = new UpdateSQL;
 
 #ifndef TEST
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     showMaximized();
 #endif
 
-//    table_exec = "T_AgentiaExecute";
-//    table_sea = "T_AgentiaSaving";
-
-//    DownLoad_TaskList();
-//    SetTitle("取界面");
-//    ShowUI();
-//    ShowSQL();
 }
 
 Dg_TaskClass::~Dg_TaskClass()
 {
+    delete commonModel;
+    delete updateSQL;
     delete ui;
 }
 
@@ -111,13 +106,13 @@ void Dg_TaskClass::ShowSQL()
 {
     QStringList e_hearders,s_hearders;
 
-    e_hearders <<"编号" << "试剂名"<<"试剂状态"<<"借用者"<<"额定容量"<<"剩余容积"\
+    s_hearders <<"编号" << "试剂名"<<"试剂状态"<<"借用者"<<"额定容量"<<"剩余容积"\
              <<"抽屉号"<<"位置号"<<" 失效日期"<<"试剂类别"<<"试剂ID"<<"位置ID"\
              <<"抽屉ID"<<"试剂状态"<<"借用者ID";
 
     e_hearders <<"编号" << "试剂名"<<"试剂状态"<<"借用者"<<"额定容量"<<"剩余容积"\
              <<"抽屉号"<<"位置号"<<" 失效日期"<<"试剂类别"<<"试剂ID"<<"位置ID"\
-             <<"抽屉ID"<<"试剂状态"<<"";
+             <<"抽屉ID"<<"试剂状态"<<" ";
 
 
     commonModel->LoadSQL(ui->TW_Exec, table_exec, e_hearders);
