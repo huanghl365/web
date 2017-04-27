@@ -6,13 +6,12 @@
 
 class Dg_Replace : public Dg_TaskClass
 {
-    Q_OBJECT
-
 public:
     Dg_Replace();
 
 private:
     void DownLoad_TaskList();
+    void ShowExecuteWindow();
 };
 
 #endif // DG_REPLACE_H

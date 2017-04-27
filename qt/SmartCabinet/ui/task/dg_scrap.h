@@ -12,6 +12,8 @@ public:
 
 private:
     void DownLoad_TaskList();
+    void ShowExecuteWindow();
+
 };
 
 #endif // DG_SCRAP_H

@@ -65,6 +65,7 @@ void Dg_TakeIn::on_pB_apply_clicked()
 {
     QList<QTableWidgetItem *> array = ui->TW_Sea->selectedItems();
     int count = array.count();
+    QString unit = "";
     int be = -1;
 
     for (int i = 0; i < count; i++)
@@ -75,7 +76,17 @@ void Dg_TakeIn::on_pB_apply_clicked()
 
             Dg_RequestPosition *requestPage = new Dg_RequestPosition(this);
             QString agentiaName = ui->TW_Sea->item(row, 1)->text();
-            requestPage->ShowAgentiaInfo(agentiaName);
+            QString agentiaUnit = ui->TW_Sea->item(row, 4)->text();
+            QString aUnit = QString(agentiaUnit[agentiaUnit.length()-1]);
+            if(aUnit == "l")
+            {
+                unit = "Ml";
+            }
+            else if (aUnit == "g")
+            {
+                unit = "g";
+            }
+            requestPage->ShowAgentiaInfo(agentiaName, unit);
             connect(requestPage, SIGNAL(ReplyNeedInfo(int,int,int,QString,QString,QString)), \
                     this, SLOT(AcceptPositionInfo(int,int,int,QString,QString,QString)));
             selectRow = row;

@@ -127,29 +127,13 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="cB_drawer">
+              <widget class="QLineEdit" name="LE_drawer">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
                  <height>40</height>
                 </size>
                </property>
-               <property name="font">
-                <font>
-                 <family>Agency FB</family>
-                 <pointsize>14</pointsize>
-                </font>
-               </property>
-               <item>
-                <property name="text">
-                 <string>1</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>2</string>
-                </property>
-               </item>
               </widget>
              </item>
             </layout>
@@ -177,10 +161,10 @@
               </widget>
              </item>
              <item>
-              <widget class="QDateEdit" name="dateEdit">
+              <widget class="QLineEdit" name="LE_datetime">
                <property name="minimumSize">
                 <size>
-                 <width>250</width>
+                 <width>0</width>
                  <height>40</height>
                 </size>
                </property>
@@ -221,23 +205,16 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="cB_bottle">
+              <widget class="QLabel" name="LB_bollte">
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
-                 <height>40</height>
+                 <width>30</width>
+                 <height>0</height>
                 </size>
                </property>
-               <item>
-                <property name="text">
-                 <string>ml</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>g</string>
-                </property>
-               </item>
+               <property name="text">
+                <string>ML</string>
+               </property>
               </widget>
              </item>
             </layout>
@@ -275,23 +252,16 @@
               </widget>
              </item>
              <item>
-              <widget class="QComboBox" name="cB_dose">
+              <widget class="QLabel" name="LB_dose">
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
-                 <height>40</height>
+                 <width>30</width>
+                 <height>0</height>
                 </size>
                </property>
-               <item>
-                <property name="text">
-                 <string>ml</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>g</string>
-                </property>
-               </item>
+               <property name="text">
+                <string>ML</string>
+               </property>
               </widget>
              </item>
             </layout>

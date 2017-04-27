@@ -20,11 +20,18 @@ Dg_RequestPosition::Dg_RequestPosition(QWidget *parent) :
     positionNo = 0;
     positionId = 0;
 
-    ui->dateEdit->setCalendarPopup(true);
-    ui->dateEdit->setDisplayFormat("yyyy.M.d");//设置日期格式
-    ui->dateEdit->setCalendarPopup(true);
-    ui->dateEdit->setDate(QDate::currentDate());
+    QDate nowDate = QDate::currentDate();
+    QString dateInfo = QString::number(nowDate.year()+1)+"."\
+            +QString::number(nowDate.month())+"."\
+            +QString::number(nowDate.day());
 
+    ui->LE_datetime->setText(dateInfo);
+    ui->LE_drawer->setText("2");
+
+//    ui->dateEdit->setCalendarPopup(true);
+//    ui->dateEdit->setDisplayFormat("yyyy.M.d");//设置日期格式
+//    ui->dateEdit->setCalendarPopup(true);
+//    ui->dateEdit->setDate(QDate::currentDate());
 }
 
 Dg_RequestPosition::~Dg_RequestPosition()
@@ -35,9 +42,11 @@ Dg_RequestPosition::~Dg_RequestPosition()
 
 
 
-void Dg_RequestPosition::ShowAgentiaInfo(QString agentiaName)
+void Dg_RequestPosition::ShowAgentiaInfo(QString agentiaName, QString Unit)
 {
     ui->TB_info->setText(QString("试剂名：%1").arg(agentiaName));
+    ui->LB_bollte->setText(Unit);
+    ui->LB_dose->setText(Unit);
 }
 
 bool Dg_RequestPosition::UnpackPosition(QJsonDocument jd)
@@ -72,20 +81,21 @@ void Dg_RequestPosition::on_pB_back_clicked()
 
 void Dg_RequestPosition::on_pB_apply_clicked()
 {
-    int drawerNo = ui->cB_drawer->currentText().toInt();
+    int drawerNo = ui->LE_drawer->text().toInt();
     QString json_str = apply_netcommunication->PackageJson_allocPosition(CABINETNO, drawerNo);
     if (apply_netcommunication->PostHttp("allocPosition", json_str, 2))
     {
         if (UnpackPosition(apply_netcommunication->ServerReply))
         {
-            QString date = ui->dateEdit->text();
-            QString dose_unit = ui->cB_dose->currentText();
+
+            QString date = ui->LE_datetime->text();
+            QString dose_unit = ui->LB_dose->text();
             QString dose = ui->lE_dose->text();
             dose += dose_unit;
-            QString bottle_unit = ui->cB_bottle->currentText();
+            QString bottle_unit = ui->LB_bollte->text();
             QString bottle = ui->lE_bottle->text();
             bottle += bottle_unit;
-            int drawer = ui->cB_drawer->currentText().toInt();
+            int drawer = ui->LE_drawer->text().toInt();
 
             emit ReplyNeedInfo(positionNo, positionId, drawer, date, bottle, dose);
         }

@@ -47,7 +47,7 @@ protected:
     void CleanSQLTable(QString name);
     void Write_Sql(QMap <int, QString> map, QString &name);
     bool GetContent(QTableWidget *source, QString name);
-    void ShowExecuteWindow();
+    virtual void ShowExecuteWindow();
 
 private:
     Ui::Dg_TaskClass *ui;

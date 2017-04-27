@@ -5,6 +5,10 @@
 #include "ui/task/dg_checkpage.h"
 #include "ui/task/dg_returnpage.h"
 #include "ui/task/dg_takein.h"
+#include "ui/task/dg_remove.h"
+#include "ui/task/dg_scrap.h"
+#include "ui/task/dg_replace.h"
+
 #include <QTimer>
 #include <QDebug>
 #include <QElapsedTimer>
@@ -26,6 +30,9 @@ Dg_FunctionOptPage::Dg_FunctionOptPage(QWidget *parent) :
 #endif
 
     Auto_freshen();
+
+    ///******
+    ui->pB_UPdate->hide();
 
 }
 
@@ -133,7 +140,7 @@ void Dg_FunctionOptPage::mousePressEvent(QMouseEvent *event)
 void Dg_FunctionOptPage::ClosePage()
 {
     this->hide();
-    waitTime(2000);//delay
+    waitTime(500);//delay
     timer->stop();
 }
 
@@ -141,6 +148,16 @@ void Dg_FunctionOptPage::ShowFunctionPage()
 {
     this->show();
     resetSignal = RESETTIMER;//重新开始自退出
+}
+
+void Dg_FunctionOptPage::waitTime(int time)
+{
+    QElapsedTimer t;
+    t.start();
+    while(t.elapsed()<time)
+    {
+        QCoreApplication::processEvents();
+    }
 }
 
 void Dg_FunctionOptPage::on_pB_takeOut_clicked()
@@ -188,12 +205,37 @@ void Dg_FunctionOptPage::on_pB_takeIn_clicked()
 
 }
 
-void Dg_FunctionOptPage::waitTime(int time)
+void Dg_FunctionOptPage::on_pB_remove_clicked()
 {
-    QElapsedTimer t;
-    t.start();
-    while(t.elapsed()<time)
-    {
-        QCoreApplication::processEvents();
-    }
+    Dg_Remove *task_remove = new Dg_Remove;
+    task_remove->show();
+    ClosePage();
+    connect(task_remove, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
+    connect(task_remove, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(this, SIGNAL(KillProgram()), task_remove, SLOT(deleteLater()));
+}
+
+void Dg_FunctionOptPage::on_pB_scrap_clicked()
+{
+    Dg_Scrap *task_scrap = new Dg_Scrap;
+    task_scrap->show();
+    ClosePage();
+    connect(task_scrap, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
+    connect(task_scrap, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(this, SIGNAL(KillProgram()), task_scrap, SLOT(deleteLater()));
+}
+
+void Dg_FunctionOptPage::on_pB_replace_clicked()
+{
+    Dg_Replace *task_replace = new Dg_Replace;
+    task_replace->show();
+    ClosePage();
+    connect(task_replace, SIGNAL(destroyed()), this, SLOT(ShowFunctionPage()));
+    connect(task_replace, SIGNAL(destroyed()), timer, SLOT(start()));
+    connect(this, SIGNAL(KillProgram()), task_replace, SLOT(deleteLater()));
+}
+
+void Dg_FunctionOptPage::on_pB_UPdate_clicked()
+{
+
 }

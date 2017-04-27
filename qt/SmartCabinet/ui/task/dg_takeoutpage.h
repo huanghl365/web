@@ -7,12 +7,14 @@
 class Dg_TakeOutPage : public Dg_TaskClass
 {
     Q_OBJECT
-
 public:
     Dg_TakeOutPage();
 
 private:
+
     void DownLoad_TaskList();
+    void ShowExecuteWindow();
+
 };
 
 #endif // DG_TAKEOUTPAGE_H

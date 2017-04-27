@@ -28,6 +28,14 @@ private slots:
 
     void on_pB_takeIn_clicked();
 
+    void on_pB_remove_clicked();
+
+    void on_pB_scrap_clicked();
+
+    void on_pB_replace_clicked();
+
+    void on_pB_UPdate_clicked();
+
 signals:
     void KillProgram();
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>674</width>
-    <height>410</height>
+    <width>427</width>
+    <height>398</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,8 +22,8 @@
         <widget class="QLabel" name="label">
          <property name="font">
           <font>
-           <family>Agency FB</family>
-           <pointsize>24</pointsize>
+           <family>Sans Serif</family>
+           <pointsize>26</pointsize>
           </font>
          </property>
          <property name="text">
@@ -83,8 +83,13 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_takeOut">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
-          <string>取</string>
+          <string>取回</string>
          </property>
         </widget>
        </item>
@@ -103,8 +108,13 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_return">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
-          <string>还</string>
+          <string>归还</string>
          </property>
         </widget>
        </item>
@@ -123,6 +133,11 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_scrap">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>报废</string>
          </property>
@@ -160,6 +175,11 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_takeIn">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>入柜</string>
          </property>
@@ -180,6 +200,11 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_remove">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>移出</string>
          </property>
@@ -200,6 +225,11 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_replace">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>替换</string>
          </property>
@@ -237,6 +267,11 @@
        </item>
        <item>
         <widget class="QPushButton" name="pB_check">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>点验</string>
          </property>
@@ -271,9 +306,43 @@
       </spacer>
      </item>
      <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pB_UPdate">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>更新</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QPushButton" name="pB_quit">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>退出</string>
          </property>
@@ -294,6 +363,11 @@
        </item>
        <item>
         <widget class="QPushButton" name="pushButton_8">
+         <property name="font">
+          <font>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
          <property name="text">
           <string>公告栏</string>
          </property>

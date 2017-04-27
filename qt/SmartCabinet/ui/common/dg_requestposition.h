@@ -16,7 +16,7 @@ public:
     explicit Dg_RequestPosition(QWidget *parent = 0);
     ~Dg_RequestPosition();
 
-    void ShowAgentiaInfo(QString agentiaName);
+    void ShowAgentiaInfo(QString agentiaName, QString doseUnit);
 
 signals:
     //返回server分配的位置信息

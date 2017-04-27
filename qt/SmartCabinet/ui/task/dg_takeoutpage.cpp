@@ -1,8 +1,9 @@
 #include "dg_takeoutpage.h"
-#include <QDebug>
+#include "ui/exec/dg_exectakeout.h"
 
 Dg_TakeOutPage::Dg_TakeOutPage()
 {
+
     table_exec = "T_AgentiaExecute";
     table_sea = "T_AgentiaSaving";
 
@@ -10,10 +11,25 @@ Dg_TakeOutPage::Dg_TakeOutPage()
     SetTitle("取界面");
     ShowUI();
     ShowSQL();
+
 }
 
+void Dg_TakeOutPage::ShowExecuteWindow()
+{
+    Dg_ExecTakeOut *execTakeOut = new Dg_ExecTakeOut(this);
+    execTakeOut->show();
+    this->hide();
+    resetSignal = HALTQUITPROCESS;//停止自动退出功能
+
+    connect(execTakeOut, SIGNAL(destroyed()), this, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed()), execTakeOut, SLOT(deleteLater()));
+}
 
 void Dg_TakeOutPage::DownLoad_TaskList()
 {
-    qDebug() << "takeout";
+    QSqlQuery query;
+    query.exec(QString("DELETE from T_AgentiaExecute"));
+
+    updateSQL->GetAllAgentia(&userId);
+//    updateSQL->GetTaskList(&userId, 1);
 }
