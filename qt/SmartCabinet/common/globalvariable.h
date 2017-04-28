@@ -14,6 +14,7 @@
 /*********************/
 #define RESETTIMER 1
 #define HALTQUITPROCESS 2
+#define STARTTIMER 3
 /************定时***************/
 #define POSTINFO2SERVER 30
 #define QUITOPTPAGE     60
@@ -57,6 +58,15 @@
 /****************抽屉状态**************************/
 #define DRAWEROPEN  1
 #define DRAWERCLOSE 0
+
+/********************任务类型********************************/
+#define TASKTYPE_SHOWALL -1
+#define TASKTYPE_TAKEIN  0
+#define TASKTYPE_TAKEOUT 1
+#define TASKTYPE_RETURN  2
+#define TASKTYPE_REPLACE 3
+#define TASKTYPE_SCRAP   4
+#define TASKTYPE_CHECK   5
 
 extern QString userName;
 extern int userId;

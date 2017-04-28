@@ -34,8 +34,6 @@ private slots:
 
     void on_pB_replace_clicked();
 
-    void on_pB_UPdate_clicked();
-
 signals:
     void KillProgram();
 

@@ -31,8 +31,6 @@ Dg_FunctionOptPage::Dg_FunctionOptPage(QWidget *parent) :
 
     Auto_freshen();
 
-    ///******
-    ui->pB_UPdate->hide();
 
 }
 
@@ -235,7 +233,3 @@ void Dg_FunctionOptPage::on_pB_replace_clicked()
     connect(this, SIGNAL(KillProgram()), task_replace, SLOT(deleteLater()));
 }
 
-void Dg_FunctionOptPage::on_pB_UPdate_clicked()
-{
-
-}

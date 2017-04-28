@@ -40,17 +40,17 @@ bool UpdateSQL::GetReagentStatusList(int *user_Id)
 //获取任务状态列表
 bool UpdateSQL::GetTaskList(int *user_Id, int task)
 {
-//    QString json_str = "";
+    QString json_str = "";
 
-//    json_str = update_http->PackageJson_taskList(*user_Id, CABINETNO);
-//    if (update_http->PostHttp("taskList", json_str, 2))
-//    {
-//        if (UnpackTaskList(update_http->ServerReply, &task))
-//        {
-//            return true;
-//        }
-//    }
-//    return false;
+    json_str = update_http->PackageJson_taskList(*user_Id, CABINETNO);
+    if (update_http->PostHttp("taskList", json_str, 2))
+    {
+        if (UnpackTaskList(update_http->ServerReply, task))
+        {
+            return true;
+        }
+    }
+    return false;
 }
 //获取用户权限列表
 bool UpdateSQL::GetCabinetPowerList()
@@ -246,7 +246,7 @@ bool UpdateSQL::UnpackAgentiaStatusList(QJsonDocument jd)
 }
 
 //解析任务列表
-bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
+bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
 {
     QString    s_str[11]    = {0};//save string
     int        s_int[11]    = {0};//save int value
@@ -270,6 +270,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
     QString newTime = "";
 
     QSqlQuery query;
+    int save_num = 0;
 
     s_json[0] = analyze_Z["success"].toBool();
     s_success = s_json[0].toBool();
@@ -281,10 +282,9 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
         int  s_taskStatus = 0;
         int  s_taskType   = 0;
 
-        if (*task == TASK_TAKEIN)
         /*******************初始化表格***********************/
 
-        query.exec(QString("DELETE from T_Task_PutIn"));//入柜
+        query.exec(QString("DELETE from T_PutInExec"));//入柜
         query.exec(QString("DELETE from T_AgentiaWaitExecute"));//归还
         query.exec(QString("DELETE from T_AgentiaReplace"));//替换
         query.exec(QString("DELETE from T_AgentiaScrap"));//报废
@@ -349,39 +349,30 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
             s_int[10] = s_json[10].toInt();
             s_taskId = s_int[10];
 
+            qDebug() << "time: " << time << "  newtime: "<<newTime;
             /********************************将任务分别加入各自执行表格中去**************************/
-            if (1 == s_taskStatus && *task == s_taskType)//审核通过
+            if (1 == s_taskStatus)//审核通过
             {
-                if (0 == s_taskType)//入柜
+                save_num++;
+                if (-1 == taskType || TASKTYPE_TAKEIN == taskType)//入柜
                 {
-                    query.prepare("insert into T_Task_PutIn (id,agentiaName,judgeAttitude,\
-                                  bottleCapacity,dose,drawerSize,expireDate,roleStatus,\
-                                  attribute,agentiaTypeId,chemicalFormula,specification,\
-                                  factory,itemNo,positionId,drawerNo,positionNo) values (?,?,?,\
-                                                                                         ?,?,?,?,?,\
-                                                                                         ?,?,?,?,\
-                                                                                         ?,?,?,?,?)");
-                    query.addBindValue(i+1);
+                    query.prepare("insert into T_PutInExec (id,agentiaName,judgeAttitude,drawerNo,\
+                                  positionNo,bottleCapacity,dose,expireDate,agentiaTypeId,\
+                                          positionId) values (?,?,?,?,?,?,?,?,?,?)");
+                    query.addBindValue(save_num);
                     query.addBindValue(s_str[3]);
                     query.addBindValue(QString("已审批"));
-                    query.addBindValue(QString(""));
-                    query.addBindValue(s_str[4]);
-                    query.addBindValue(QString(""));
-                    query.addBindValue(time);
-                    query.addBindValue(0);
-                    query.addBindValue(3);
-                    query.addBindValue(s_taskType);
-                    query.addBindValue(QString(""));
-                    query.addBindValue(QString(""));
-                    query.addBindValue(QString(""));
-                    query.addBindValue(QString(""));
-                    query.addBindValue(s_taskId);
                     query.addBindValue(s_int[5]);
                     query.addBindValue(s_int[6]);
+                    query.addBindValue(QString(""));
+                    query.addBindValue(s_str[4]);
+                    query.addBindValue(time);
+                    query.addBindValue(s_taskId);
+                    query.addBindValue(3);
 
                     query.exec();
                 }
-                else if (1 == s_taskType)//取用已改
+                if (-1 == taskType || TASKTYPE_TAKEOUT == taskType)//取用已改
                 {
                     query.prepare("insert into T_AgentiaExecute (id,agentiaName,judgeAttitude,bottleCapacity,\
                                   dose,drawerNo,positionNo,expireDate,attribute,\
@@ -402,7 +393,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
 
                     query.exec();
                 }
-                else if (2 == s_taskType)//归还已改
+                if (-1 == taskType || TASKTYPE_RETURN == taskType)//归还已改
                 {
                     query.prepare("insert into T_AgentiaReturnExecute (id,agentiaName,judgeAttitude,bottleCapacity,\
                                   dose,drawerNo,positionNo,expireDate,attribute,agentiaId,positionId)\
@@ -421,18 +412,15 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
 
                     query.exec();
                 }
-                else if (3 == s_taskType)//替换
+                if (-1 == taskType || TASKTYPE_REPLACE == taskType)//替换
                 {
                     query.prepare("insert into T_AgentiaReplace (id,agentiaName,judgeAttitude,bottleCapacity,\
-                                  dose,newdose,expireDate,drawerNo,positionNo,attribute,\
-                                  agentiaId,positionId) values (?,?,?,\
-                                                                              ?,?,?,?,?,?,\
-                                                                              ?,?,?)");
+                                  dose,expireDate,drawerNo,positionNo,attribute,\
+                                  agentiaId,positionId) values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
                     query.addBindValue(QString("已审批"));
                     query.addBindValue(QString(""));
-                    query.addBindValue(s_str[4]);
                     query.addBindValue(s_str[8]);
                     query.addBindValue(newTime);
                     query.addBindValue(s_int[5]);
@@ -443,13 +431,11 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
 
                     query.exec();
                 }
-                else if (4 == s_taskType)//报废
+                if (-1 == taskType || TASKTYPE_SCRAP == taskType)//报废
                 {
                     query.prepare("insert into T_AgentiaScrap (id,agentiaName,judgeAttitude,bottleCapacity,\
                                   dose,drawerNo,positionNo,expireDate,attribute,\
-                                  agentiaId,positionId) values (?,?,?,\
-                                                                              ?,?,?,?,?,\
-                                                                              ?,?,?)");
+                                  agentiaId,positionId) values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
                     query.addBindValue(QString("已审批"));
@@ -464,19 +450,16 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
 
                     query.exec();
                 }
-                else if (5 == s_taskType)//点验
+                if (-1 == taskType || TASKTYPE_CHECK == taskType)//点验
                 {
                     query.prepare("insert into T_AgentiaCheck (id,agentiaName,judgeAttitude,bottleCapacity,\
-                                  dose,newdose,expireDate,drawerNo,positionNo,attribute,\
-                                  agentiaId,positionId) values (?,?,?,?,?,\
-                                                                              ?,?,?,?,\
-                                                                              ?,?,?)");
+                                  dose,expireDate,drawerNo,positionNo,attribute,\
+                                  agentiaId,positionId) values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
                     query.addBindValue(QString("已审批"));
                     query.addBindValue(QString(""));
                     query.addBindValue(s_str[4]);
-                    query.addBindValue(s_str[8]);
                     query.addBindValue(newTime);
                     query.addBindValue(s_int[5]);
                     query.addBindValue(s_int[6]);
@@ -488,6 +471,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int *task)
                 }
             }
         }
+
         return true;
     }
 

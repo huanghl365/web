@@ -21,7 +21,7 @@
 #include <QCoreApplication>
 #include <QByteArray>
 
-int photosensor[2];
+int drawer_data[3];
 int alarm_position[27];
 QSerialPort* myCom;
 QByteArray alldata;
@@ -85,7 +85,6 @@ int checkSerialPort()
     return -1;
 }
 
-
 char uartCheckSum(char* data, int num) //校验码
 {
     char sum = 0;
@@ -120,6 +119,9 @@ void PackageSend(QSerialPort* uartfd,int DID, struct Package1 data1, struct Pack
     uartfd->write(dataMsg,9+sendLen);
 }
 
+
+
+
 int SetAct(QSerialPort* uartfd,int DID,unsigned char *DataAct)//0x12 控制任务状态
 {
     struct Package1 P1;
@@ -151,8 +153,6 @@ int SendAct(QSerialPort* uartfd,int DID,int ActMode) //0x13 发送任务完成�
     return (0);
 }
 
-
-
 int RequestAlarm(QSerialPort* uartfd,int DID)//0xE0 请求报警信息
 {
     struct Package1 P1;
@@ -165,6 +165,7 @@ int RequestAlarm(QSerialPort* uartfd,int DID)//0xE0 请求报警信息
     PackageSend(uartfd,DID,P1, P2);
     return (0);
 }
+
 
 int wait4SetAct(int DID,int send_ActNum,int *send_positionNo)//设置Act
 {
@@ -195,6 +196,8 @@ int wait4SendAct(int DID,int ActMode)//发送任务完成指令
     int i,j;
     for(i=0;i<3;i++)
     {
+        if(myCom->bytesAvailable()>0)
+            myCom->readAll();
         SendAct(myCom,DID,ActMode);
         waitTaskInfo(50);
         int rtnState = readData();
@@ -236,37 +239,41 @@ void AnalyzeAlarm()    //解析警报信息
 
 
 int wait4Alarm(int DID)
-
 {
-    int i;
+    int i,j;
     for(i=0;i<3;i++)
     {
+        if(myCom->bytesAvailable()>0)
+            myCom->readAll();
         RequestAlarm(myCom,DID);
         waitTaskInfo(50);
-            int rtnState = readData();
-            if (rtnState == STATE_ALARM)
+        int rtnState = readData();
+        if (rtnState == STATE_ALARM)
+        {
+            qDebug("Get ALARM");
+            memset(Alarm_No[0],0,64);
+            memset(Alarm_No[1],0,64);
+            memset(Alarm_No[2],0,64);
+            AnalyzeAlarm();
+            if(Alarm_No[0][0] != 0)
             {
-                qDebug("Get ALARM");
-                memset(Alarm_No[0],0,64);
-                memset(Alarm_No[1],0,64);
-                memset(Alarm_No[2],0,64);
-                AnalyzeAlarm();
-                if(Alarm_No[0][0] != 0)
-                {
-                    return 0;
-                }
-                else if(Alarm_No[2][0] != 0)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return 2;
-                }
+                wait4SendAct(0x01,1);
+                return 0;
             }
+            else if(Alarm_No[2][0] != 0)
+            {
+                wait4SendAct(0x01,1);
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
     }
     return -1;
 }
+
 
 int readData()
 {
@@ -291,109 +298,88 @@ int readData()
                 return STATE_ERROR;
             }
             int pHead = alldata.indexOf(frameHead,0);
-
-                unsigned char CID = 0;
-                int exDataLen = 0;
-                unsigned char checkSum = 0;
-                for(i = pHead+4; i < pHead+8; i++)
-                    checkSum += alldata.at(i);
-                if((unsigned char)(alldata.at(i)) != checkSum)
+            unsigned char CID = 0;
+            int exDataLen = 0;
+            unsigned char checkSum = 0;
+            for(i = pHead+4; i < pHead+8; i++)
+                checkSum += alldata.at(i);
+            if((unsigned char)(alldata.at(i)) != checkSum)
+            {
+                qDebug("P1 Check Sum Error!\n");
+                alldata.clear();
+                return STATE_ERROR;
+            }
+            else
+            {
+                qDebug("P1 Check Sum Confirmed!\n");
+                CID=(unsigned char)(alldata.at(pHead+5));
+                exDataLen = (unsigned char)(alldata.at(pHead+6));
+                //有扩展帧
+                if(exDataLen>0)
                 {
-                    qDebug("P1 Check Sum Error!\n");
-                    alldata.clear();
-                    return STATE_ERROR;
-                }
-                else
-                {
-                    qDebug("P1 Check Sum Confirmed!\n");
-                    CID=(unsigned char)(alldata.at(pHead+5));
-                    exDataLen = (unsigned char)(alldata.at(pHead+6));
-                    //有扩展帧
-                    if(exDataLen>0)
+                    qDebug("Extra data length: %d\n", exDataLen);
+                    checkSum = 0;
+                    waitTaskInfo(2);
+                    while(myCom->bytesAvailable()>0)
+                        alldata.append(myCom->readAll());
+                    if(alldata.count() < pHead+exDataLen+9)
                     {
-                        qDebug("Extra data length: %d\n", exDataLen);
-                        checkSum = 0;
-                        waitTaskInfo(100);
-                        if(myCom->bytesAvailable()>0)
-                            alldata.append(myCom->readAll());
-                        if(alldata.count() < pHead+exDataLen+9)
+                        qDebug("CID ERROR1");
+                        return STATE_ERROR;
+                    }
+                    for(i = pHead+9;i<pHead+exDataLen+8;i++)
+                        checkSum += alldata.at(i);
+                    if((unsigned char)(alldata.at(pHead+exDataLen+8)) == checkSum)
+                    {
+                        if(CID==CID_ALARM)                 //0xE0
                         {
-                            qDebug("CID ERROR1");
-                            return STATE_ERROR;
-                        }
-                        qDebug() << alldata<< "      alldata------";
-                        for(i = pHead+9;i<pHead+exDataLen+8;i++)
-                            checkSum += alldata.at(i);
-                        if((unsigned char)(alldata.at(pHead+exDataLen+8)) == checkSum)
-                        {
-                            if(CID == CID_REQUEST_DRAWER_LOCK) //0x41
+                            memset(alarm_position,0,27);
+                            for(int i=0;i<27;i++)
                             {
-                                if(alldata.at(pHead+9)==0)
-                                {
-                                    qDebug("Door1 Lock CLOSE!");
-                                    return STATE_DRAWER_LOCK_CLOSE;
-                                }
-                                else
-                                {
-                                    qDebug("Door1 Lock OPEN!");
-                                    return STATE_DRAWER_LOCK_OPEN;
-                                }
-
+                                alarm_position[i]=(unsigned char)(alldata.at(pHead+9+i));
                             }
-                            else if(CID==CID_ALARM)                 //0xE0
-                            {
-                                memset(alarm_position,0,27);
-                                for(int i=0;i<27;i++)
-                                {
-                                    alarm_position[i]=(unsigned char)(alldata.at(pHead+9+i));
-                                }
-                                qDebug("Request alarm position!");
-                                return STATE_ALARM;
-                            }
-                            else
-                            {
-                                qDebug("CID ERROR2");
-                                return STATE_ERROR;
-                            }
-
+                            qDebug("Request alarm position!");
+                            return STATE_ALARM;
                         }
                         else
                         {
-                            qDebug("P2 Check Sum Error: %x\n", checkSum);
+                            qDebug("CID ERROR2");
                             return STATE_ERROR;
                         }
+
                     }
-                    //没有扩展帧
                     else
                     {
-                        if(CID == CID_SET_DRAWER_LOCK )                 //0x11
-                        {
-                            qDebug("CID_SET_DRAWER_LOCK");
-                            return STATE_SET_DRAWER_LOCK;
-                        }
-                        else if(CID==CID_SET_ACT)                       //0x12
-                        {
-                            qDebug("CID_SET_ACT");
-                            return STATE_SET_ACT;
-                        }
-                        else if(CID==CID_SEND_ACT)                      //0x13
-                        {
-                            qDebug("CID_SET_ACT");
-                            return STATE_SEND_ACT;
-                        }
-                        else
-                        {
-                            qDebug("CID ERROR3");
-                            return STATE_ERROR;
-                        }
+                        qDebug("P2 Check Sum Error: %x\n", checkSum);
+                        return STATE_ERROR;
                     }
                 }
+                //没有扩展帧
+                else
+                {
+                    if(CID==CID_SET_ACT)                       //0x12
+                    {
+                        qDebug("CID_SET_ACT");
+                        return STATE_SET_ACT;
+                    }
+                    else if(CID==CID_SEND_ACT)                      //0x13
+                    {
+                        qDebug("CID_SET_ACT");
+                        return STATE_SEND_ACT;
+                    }
+                    else
+                    {
+                        qDebug("CID ERROR3");
+                        return STATE_ERROR;
+                    }
+                }
+            }
         }
     }
     return STATE_ERROR;
 }
 
-/*************************************开锁**************************************************************/
+/**************************锁控板程序***************************************/
 void drawer_PackageSend(QSerialPort* uartfd,int DID, struct Package3 data3)
 {
 
@@ -418,18 +404,123 @@ int DrawerLock(QSerialPort* uartfd,int CID,int DID,unsigned char *DataAct)
     return (0);
 }
 
+int RequestDrawerLock(int DrawerNo)
+{
+    myCom->setBaudRate(9600);
+    waitTaskInfo(50);
+    int i;
+    int CID = CID_REQUEST_DRAWER_LOCK ;
+    unsigned char DataAct[3] = {0};
+    DataAct[0] = (1 << (DrawerNo-1));
+    for(i=0;i<3;i++)
+    {
+        DrawerLock(myCom,CID,0,DataAct);
+        if(drawer_readData())
+        {
+            myCom->setBaudRate(38400);
+            waitTaskInfo(50);
+            unsigned long drawer_alarm = drawer_data[0]<<(8-DrawerNo);
+            if(drawer_alarm & 0x80)
+            {
+                qDebug("锁打开");
+                return DRAWER_OPEN;
+            }
+            else
+            {
+                qDebug("锁关闭");
+                return DRAWER_CLOSE;
+            }
+        }
+    }
+    return -1;
+}
+
 int opendrawer(int DrawerNo)
 {
-
     myCom->setBaudRate(9600);
-    waitTaskInfo(100);
+    waitTaskInfo(50);
+
+    int i;
     int CID = CID_SET_DRAWER_LOCK;
     unsigned char DataAct[3] = {0};
     DataAct[0] = (1 << (DrawerNo-1));
-    DrawerLock(myCom,CID,0,DataAct);
-    waitTaskInfo(500);
-    myCom->setBaudRate(38400);
-    waitTaskInfo(100);
-
+    for(i=0;i<3;i++)
+    {
+        DrawerLock(myCom,CID,0,DataAct);
+        waitTaskInfo(100);
+        if(drawer_readData())
+        {
+            myCom->setBaudRate(38400);
+            waitTaskInfo(50);
+            qDebug("开锁");
+            return 1;
+        }
+    }
+    return -1;
 }
 
+
+int IntoDrawer(int DrawerNo)
+{
+    int i;
+
+    int drawerState = RequestDrawerLock(DrawerNo);
+    if(drawerState == DRAWER_CLOSE)
+    {
+        for(i = 0; i < 2; i++)
+        {
+            if(!opendrawer(DrawerNo))
+                return -1;
+            drawerState = RequestDrawerLock(DrawerNo);
+            if(drawerState == DRAWER_OPEN)
+                return 0;
+            else if(drawerState == DRAWER_CLOSE)
+            {
+                if(i == 3)
+                    return -1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        return -1;
+    }
+    else if(drawerState == DRAWER_OPEN)
+        return 0;
+    else
+        return -1;
+}
+
+
+
+int drawer_readData()
+{
+    int i,j;
+    alldata.clear();
+    for(j=0;j<20;j++)
+    {
+        waitTaskInfo(50);
+        if(myCom->bytesAvailable()>=6)
+        {
+            alldata.append(myCom->readAll());
+            qDebug("Data recv %d.", alldata.size());
+            for(i=0;i<(alldata.size()-5);i++)
+            {
+                if(!(alldata.at(i) == 0x00)&&(alldata.at(i+2) == 0x00)&&(alldata.at(i+4) == 0x00))
+                {
+                    qDebug("Invalid frame head!\n");
+                    return STATE_ERROR;
+                }
+            }
+            memset(drawer_data,0,3);
+            for(i=0;i<3;i++)
+            {
+                drawer_data[i]=alldata.at(2*i);
+                return 1;
+            }
+
+        }
+    }
+    return -1;
+}

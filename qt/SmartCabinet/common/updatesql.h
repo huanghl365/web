@@ -32,7 +32,7 @@ private:
     WaitingPage *update_waitPage;
     NetCommunication *update_http;
 
-    bool UnpackTaskList(QJsonDocument jd,int *task);
+    bool UnpackTaskList(QJsonDocument jd,int taskType = -1);
     bool UnpackAgentiaStatusList(QJsonDocument jd);
     bool UnpackPrivilegeTable(QJsonDocument jd);
     bool UnpackOccupiedAgentiaList(QJsonDocument jd);

@@ -80,7 +80,7 @@ void Dg_TakeIn::on_pB_apply_clicked()
             QString aUnit = QString(agentiaUnit[agentiaUnit.length()-1]);
             if(aUnit == "l")
             {
-                unit = "Ml";
+                unit = "ml";
             }
             else if (aUnit == "g")
             {

@@ -27,15 +27,15 @@ void SerialPortControl::HandleFlow(int DID, int send_ActNum)
 {
     bool isContinueExecute = false;
     //查询锁的状态
-//    if (RequestLockStauts(DID))//CLOSE 0 OPEN 1
-//        isContinueExecute = true;
-//    else
-//    {
-//        if (Unlock(DID))
-//            isContinueExecute = true;
-//        else
-//            Task_Error(ACT_INTODRAWER_FAIL);
-//    }
+    if (RequestLockStauts(DID))//CLOSE 0 OPEN 1
+        isContinueExecute = true;
+    else
+    {
+        if (Unlock(DID))
+            isContinueExecute = true;
+        else
+            Task_Error(ACT_INTODRAWER_FAIL);
+    }
 
     if (temporaryLock != DID)
     {
@@ -85,8 +85,8 @@ void SerialPortControl::HandleFlow(int DID, int send_ActNum)
 //查询锁的状态
 bool SerialPortControl:: RequestLockStauts(int DID)
 {
-//    int lockStatus = wait4GetDrawer(DID);//CLOSE 0 OPEN 1
-    int lockStatus = 0;
+    int lockStatus = RequestDrawerLock(DID);//CLOSE 0 OPEN 1
+
     if (1 == lockStatus)
     {
         return true;
@@ -96,10 +96,7 @@ bool SerialPortControl:: RequestLockStauts(int DID)
 //开锁
 bool SerialPortControl::Unlock(int DID)
 {
-//    int status_L = IntoDrawer(DID);
-    opendrawer(DID);
-    qDebug()<<" Unlock";
-    int status_L = 0 ;
+    int status_L = IntoDrawer(DID);
     if (0 == status_L)
     {
         return true;
@@ -208,8 +205,7 @@ void SerialPortControl::wait(int time)
 
 void SerialPortControl::ReturnLockStatus(int DID)
 {
-//    int lockStatus = wait4GetDrawer(DID);//CLOSE 0 OPEN 1
-    int lockStatus = 0;
+    int lockStatus = RequestDrawerLock(DID);//CLOSE 0 OPEN 1
     if (1 == lockStatus)
         emit ReturnLock(DRAWEROPEN);
     else

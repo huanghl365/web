@@ -64,6 +64,8 @@ void TimerAndUpdate::dealTask()
             emit Timer_Task_UpdateSQL();
             timeCount_returnAndUpdate = 0;
         }
+
+        resetSignal = STARTTIMER;
     }
     else
     {
@@ -72,7 +74,7 @@ void TimerAndUpdate::dealTask()
 
 #ifdef TEST
     qDebug() << "timeCount_returnAndUpdate: " << timeCount_returnAndUpdate;
-    qDebug() << "timeCount_sendNeedIndo = 0 " << timeCount_sendNeedInfo;
+    qDebug() << "timeCount_sendNeedIndo:    " << timeCount_sendNeedInfo;
 #endif
 
 }

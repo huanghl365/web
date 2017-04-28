@@ -28,8 +28,9 @@ void Dg_TakeOutPage::ShowExecuteWindow()
 void Dg_TakeOutPage::DownLoad_TaskList()
 {
     QSqlQuery query;
-    query.exec(QString("DELETE from T_AgentiaExecute"));
+
+    query.exec(QString("DELETE from %1").arg(table_exec));
 
     updateSQL->GetAllAgentia(&userId);
-//    updateSQL->GetTaskList(&userId, 1);
+    updateSQL->GetTaskList(&userId, -1);
 }
