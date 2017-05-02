@@ -37,6 +37,13 @@ Dg_TaskClass::~Dg_TaskClass()
     delete ui;
 }
 
+void Dg_TaskClass::_Main(QString pageName)
+{
+    DownLoad_TaskList();
+    SetTitle(pageName);
+    ShowUI();
+    ShowSQL();
+}
 
 void Dg_TaskClass::on_CB_return_clicked()
 {

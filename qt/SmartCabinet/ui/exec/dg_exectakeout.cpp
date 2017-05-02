@@ -25,7 +25,7 @@ Dg_ExecTakeOut::Dg_ExecTakeOut(QWidget *parent) :
     agetiaInfo = new Save_AgentiaInfo;
 
 #ifndef TEST
-    this->showFullScreen();
+//    this->showFullScreen();
 #endif
 
 

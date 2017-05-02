@@ -20,6 +20,9 @@ Dg_FunctionOptPage::Dg_FunctionOptPage(QWidget *parent) :
     ui(new Ui::Dg_FunctionOptPage)
 {
     ui->setupUi(this);
+//    setWindowFlags(Qt::Dialog);
+//    setWindowFlags(Qt::Window);
+//    this->showFullScreen();
 
     timer = new QTimer(this);
     timer->start(2000);
@@ -28,7 +31,6 @@ Dg_FunctionOptPage::Dg_FunctionOptPage(QWidget *parent) :
 #ifndef TEST
     this->showFullScreen();
 #endif
-
     Auto_freshen();
 
 

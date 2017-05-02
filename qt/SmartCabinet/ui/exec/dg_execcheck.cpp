@@ -48,7 +48,7 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
     ui->lE_volum->setValidator(validator_bottleCapacity);
 
 #ifndef TEST
-    this->showFullScreen();
+//    this->showFullScreen();
 #endif
     //      showMaximized();
     //      setWindowFlags(Qt::FramelessWindowHint);

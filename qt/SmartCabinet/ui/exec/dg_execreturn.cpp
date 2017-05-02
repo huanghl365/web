@@ -66,8 +66,8 @@ Dg_ExecReturn::Dg_ExecReturn(QWidget *parent) :
 
 
 #ifndef TEST
-    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    showMaximized();
+//    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+//    showMaximized();
 #endif   //      showMaximized();
     //      setWindowFlags(Qt::FramelessWindowHint);
 

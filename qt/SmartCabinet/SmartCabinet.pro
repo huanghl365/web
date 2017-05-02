@@ -90,5 +90,4 @@ RESOURCES += \
 
 target.path = /home/pi/test
 INSTALLS += target
-
 #include($$PWD/inputnew/inputnew.pri)

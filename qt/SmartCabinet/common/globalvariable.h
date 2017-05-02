@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#define TEST //test mode
+//#define TEST //test mode
 
 
 #define OPEN_THREAD 1

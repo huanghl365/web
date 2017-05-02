@@ -7,13 +7,10 @@
 Dg_CheckPage::Dg_CheckPage(QWidget *parent) :
     Dg_TaskClass(parent)
 {
-    //    table_exec = "T_AgentiaExecute";
-    //    table_sea = "T_AgentiaSaving";
+    table_exec = "T_AgentiaExecute";
+    table_sea = "T_AgentiaSaving";
 
-    //    DownLoad_TaskList();
-    //    SetTitle("取界面");
-    //    ShowUI();
-    //    ShowSQL();
+    _Main("点验界面");
 
 }
 

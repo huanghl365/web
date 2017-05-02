@@ -23,8 +23,9 @@ Dg_TakeIn::Dg_TakeIn(QWidget *parent) :
 #endif
 //      showMaximized();
 //      setWindowFlags(Qt::FramelessWindowHint);
-    DownLoad_TaskList();
     SetTitle("入柜界面");
+
+    DownLoad_TaskList();
     ShowUI();
     ShowSQL();
 }

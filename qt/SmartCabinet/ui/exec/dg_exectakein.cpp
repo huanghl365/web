@@ -68,7 +68,7 @@ Dg_ExecTakeIn::Dg_ExecTakeIn(QWidget *parent) :
 
 
 #ifndef TEST
-    this->showFullScreen();
+//    this->showFullScreen();
 #endif
 
 

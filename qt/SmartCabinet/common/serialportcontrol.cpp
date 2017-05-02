@@ -37,13 +37,6 @@ void SerialPortControl::HandleFlow(int DID, int send_ActNum)
             Task_Error(ACT_INTODRAWER_FAIL);
     }
 
-    if (temporaryLock != DID)
-    {
-        Unlock(DID);
-        temporaryLock = DID;
-    }
-    isContinueExecute = true;
-
     if (isContinueExecute)
     {
         if (Send_Act(DID, send_ActNum))

@@ -48,6 +48,7 @@ protected:
     void Write_Sql(QMap <int, QString> map, QString &name);
     bool GetContent(QTableWidget *source, QString name);
     virtual void ShowExecuteWindow();
+    void _Main(QString pageName);
 
 private:
     Ui::Dg_TaskClass *ui;

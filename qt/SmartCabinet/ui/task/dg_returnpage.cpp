@@ -14,8 +14,7 @@ Dg_ReturnPage::Dg_ReturnPage(QWidget *parent) :
 #ifndef TEST
     this->showFullScreen();
 #endif
-//      showMaximized();
-//      setWindowFlags(Qt::FramelessWindowHint);
+
     DownLoad_TaskList();
     ShowGUI();
 }

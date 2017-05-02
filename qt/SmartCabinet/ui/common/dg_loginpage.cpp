@@ -17,7 +17,6 @@ Dg_LoginPage::Dg_LoginPage(QWidget *parent) :
 #ifndef TEST
       setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
       showMaximized();
-
 #endif
 
 }
