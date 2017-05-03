@@ -48,13 +48,12 @@ void Initprocess::CreateSql()
 
 void Initprocess::StartSerialPortThread()
 {
-    SerialPortWorking *serialport = new SerialPortWorking;
     QThread *serialPort_thread = new QThread;
-    serialport->moveToThread(serialPort_thread);
+    serialPortControl_G->moveToThread(serialPort_thread);
     serialPort_thread->start();
 
     emit CreateSerialPort();
-    connect(this, SIGNAL(CreateSerialPort()), serialport, SLOT(CreateSerialPort()));
+    connect(this, SIGNAL(CreateSerialPort()), serialPortControl_G, SLOT(CreateSerialPort()));
 
 }
 

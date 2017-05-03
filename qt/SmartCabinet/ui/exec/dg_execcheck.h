@@ -4,8 +4,6 @@
 #include <QDialog>
 #include <QSqlTableModel>
 #include <QSqlQuery>
-#include <QThread>
-#include "common/serialportcontrol.h"
 #include "network/netcommunication.h"
 
 namespace Ui {
@@ -20,19 +18,11 @@ public:
     explicit Dg_ExecCheck(QWidget *parent = 0);
     ~Dg_ExecCheck();
 
-    enum{CabinetError, OperateError, PositionError, DrawerError};
-    enum allControl{serialPortOpenFail, serialPortOpenSuccess,jumpCurrentAct, haveErrorHandle,\
-                    haveNotExecTask, havetaskOver, nextTask, actSendFail};
-
-    enum Lock_S{taskActing, clickReturn};
 
 signals:
-    void TaskAct_Send(int DID, int send_ActNum);
-    void OpenSerialPort();
-    void GetLockStatus(int DID);
-    void Unlocksignal(int DID);
-    void StopTask(int DID);
-    void QuitExecPage();
+    void ControlTimer_SerialPort(bool _switch);
+    void TaskCommand_Send2MCU(int DID, int send_ActNum);
+
 
 private slots:
     void on_pB_sure_clicked();
@@ -41,20 +31,16 @@ private slots:
 
     void on_pB_jump_clicked();
 
-    void ErrorMessage(int order);
-    void HandleReply(int order);
-    void LockStatusSlots(int order);
-    void ClosePage();
-
-
 private:
     Ui::Dg_ExecCheck *ui;
     QSqlTableModel *t_exec;
     QSqlQuery *query;
-    QThread *threadSerialPort;
-    SerialPortControl *serialPort;
-    QTimer *timer;
     NetCommunication *netCommunication;
+    int count;
+    QString tableName;
+
+    enum{NetworkTask, haveErrorHandle, haveNotExecTask, havetaskOver, PB_jump, PB_return,\
+        haveErrorHandle_CLOSE, haveNotExecTask_CLOSE, havetaskOver_CLOSE};
 
 
     QMap <int, int> save_drawer;
@@ -62,6 +48,7 @@ private:
     QMap <int, int> save_number;
     QMap <int, int> save_previousErrorPosition;
     QList<int> save_warningInfo;
+    QList <QString> save_needDel;
 
     struct Save_AgentiaInfo{
         int getC_agentiaId;
@@ -73,59 +60,70 @@ private:
     };
     Save_AgentiaInfo *agetiaInfo;
 
+    //定义对应列表列数
+    int s_drawerColumn;
+    int s_positioinColumn;
+    int s_judgeStatusColumn;
+    int s_nameColumn;
+    int s_agetiaIdColumn;
+    int s_positionIdColumn;
+    int s_number;
+    int s_dose;
 
-    bool isOpenSerialPort;
-    int count;
-    int lockStatus;
-    int preDrawerNo;
 
-
-    //设置标题
-    void SetTitle(QString name);
-    //总处理
-    void ProcessHandle();
+    //程序总控
+    bool All_Control();
+    //检查数据库有无数据
+    bool CheckTable_haveData(QString tableName);
+    //检查锁状态
+    bool CheckLock_isOpen();
+    //指令发送结果
+    bool CheckTask_isSendSuccess();
+    //任务状况
+    int CheckDrawerTaskStatus();
     //显示界面，排序
     void ShowPage();
+    //显示任务信息
+    void ShowCurrentAgentiaInfo(int i);
     //获取位置号
-    void GetDrawerAndPositionNum();
-    //加载下一条任务信息
-    void ShowCurrentNeedExecuteTaskInfo(int i);
-    //创建子线程
-    void CreateAndStartThread();
-    //上报任务信息
-    void UploadTask2Server();
-    void UploadWarning(QString json_str, QString warningContent, int model);
-    void UploadDisableDrawerAndPosition(int model);
+    void GetDrawerAndPosition();
+    //任务下发
+    void Send_TaskInfo2MCU();
+    //等待
+    void waitTime(int time);
+    //下一条任务
+    bool NextTask();
     //解析json
     bool UnpackageJson_Task(QJsonDocument str);
-    //创建串口
-    void CreateSerialPort();
     //修改单元格内容
     void ChangeCellContent(int row, int column, QString content);
     void ChangeStatus(QString content);
     //设置提示框内容
     void TextMessageShowContent(QString colorType, QString content);
-    //初始化结构体
-    void InitializeStruct();
+    //等待当前锁关闭
+    void RequestLockStatus_Current();
     //存储数据库
     void WriteSQL_NetworkError();
     //读取异常信息
     void GetError();
-    //总控台
-    void AllControl(int order);
+    //初始化结构体
+    void InitializeStruct();
+    //上报任务信息
+    void UploadTask2Server();
+    void UploadWarning(QString json_str, QString warningContent, int model);
+    void UploadDisableDrawerAndPosition();
+    //离线本地修改状态
+    void Change_SQL_Table();
     //检测错误是否存在
     void isSaveError(int goal);
-    //下一条任务
-    void NextTask();
-    //等待当前锁关闭
-    void RequestLockStatus_Current(int i);
-    //任务下发
-    void TaskSend();
-    //清空数据库
-    void ClearSql();
-    //等待
-    void waitTime(int time);
-
+    //设置输入格式
+    void SetInputReg();
+    //关闭界面
+    void ClosePage();
+    //控制定时器
+    void ControlTimer(QString status);
+    //处理任务状态
+    void HandleTask(int order);
 
 };
 

@@ -12,9 +12,10 @@ SerialPortWorking::SerialPortWorking(QObject *parent) : QObject(parent)
 {
     netCommunication = new NetCommunication;
     timer = new QTimer;
-//    timer->start(SERIALLOOP_TIMER);
-//    timer->stop();
-    timer->start(1000);
+
+    timer->start(SERIALLOOP_TIMER);
+    timer->stop();
+
     connect(timer, SIGNAL(timeout()), this, SLOT(Model_B()));
 }
 

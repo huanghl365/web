@@ -93,7 +93,7 @@ extern QString CABINETNO;
 extern QString VERSION;
 
 /*************serialport*******************/
-extern SerialPortWorking *serialPortControl;
+extern SerialPortWorking *serialPortControl_G;
 extern bool is_ARM_receivedReply_from_MCU;
 extern bool is_OpenSerialPort;
 extern int currentLockStatus;
