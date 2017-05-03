@@ -22,7 +22,6 @@ SOURCES += main.cpp \
     common/delaytime.cpp \
     common/initprocess.cpp \
     common/serialportcontrol.cpp \
-    common/threadcontrol.cpp \
     common/timerandupdate.cpp \
     common/uart4stm.cpp \
     common/waitingpage.cpp \
@@ -41,7 +40,8 @@ SOURCES += main.cpp \
     ui/task/dg_takeoutpage.cpp \
     ui/task/dg_remove.cpp \
     ui/task/dg_scrap.cpp \
-    ui/task/dg_replace.cpp
+    ui/task/dg_replace.cpp \
+    common/serialportworking.cpp
 
 HEADERS  += \
     ui/common/dg_loginpage.h \
@@ -52,7 +52,6 @@ HEADERS  += \
     common/initprocess.h \
     common/serialportcontrol.h \
     common/Sql_Setting.h \
-    common/threadcontrol.h \
     common/timerandupdate.h \
     common/uart4stm.h \
     common/waitingpage.h \
@@ -70,7 +69,8 @@ HEADERS  += \
     ui/task/dg_takeoutpage.h \
     ui/task/dg_remove.h \
     ui/task/dg_scrap.h \
-    ui/task/dg_replace.h
+    ui/task/dg_replace.h \
+    common/serialportworking.h
 
 FORMS    += \
     ui/common/dg_loginpage.ui \

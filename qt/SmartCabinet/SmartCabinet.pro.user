@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.2.0, 2017-05-02T17:38:55. -->
+<!-- Written by QtCreator 4.2.0, 2017-05-03T15:14:43. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -533,8 +533,8 @@
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
       <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">RemoteLinux.DirectUploadStep</value>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedFiles">
-       <value type="QString">/home/dijia/workspace/qt/build-SmartCabinet-ARM-Debug/SmartCabinet</value>
        <value type="QString">/home/dijia/workspace/qt/build-SmartCabinet-Desktop_Qt_5_7_1_GCC_64bit-Debug/SmartCabinet</value>
+       <value type="QString">/home/dijia/workspace/qt/build-SmartCabinet-ARM-Debug/SmartCabinet</value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedHosts">
        <value type="QString">192.168.4.101</value>
@@ -549,8 +549,8 @@
        <value type="QString"></value>
       </valuelist>
       <valuelist type="QVariantList" key="ProjectExplorer.RunConfiguration.LastDeployedTimes">
-       <value type="QDateTime">2017-05-02T15:04:15</value>
        <value type="QDateTime">2017-05-02T11:26:56</value>
+       <value type="QDateTime">2017-05-02T15:04:15</value>
       </valuelist>
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.IgnoreMissingFiles">false</value>
       <value type="bool" key="RemoteLinux.GenericDirectUploadStep.Incremental">true</value>

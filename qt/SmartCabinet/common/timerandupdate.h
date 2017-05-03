@@ -15,6 +15,7 @@ class TimerAndUpdate : public QTimer
     Q_OBJECT
 public:
     explicit TimerAndUpdate(QObject *parent = 0);
+    ~TimerAndUpdate();
 
 signals:
     void Timer_Task_Quit(void);

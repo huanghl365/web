@@ -2,6 +2,7 @@
 #define GLOBALVARIABLE_H
 
 #include <QString>
+#include "common/serialportworking.h"
 
 //#define TEST //test mode
 
@@ -55,9 +56,14 @@
 #define TASK_HAVENOTEXEC   1
 #define TASK_OVER          2
 #define TASK_NOTREPLY      -1
+#define TASK_OFFWORKING   -2
 /****************抽屉状态**************************/
 #define DRAWEROPEN  1
 #define DRAWERCLOSE 0
+/******************锁状态********************************/
+#define LOCK_CURRENT_STATUS_FAIL -1
+#define LOCK_CURRENT_STATUS_OPEN 1
+#define LOCK_CURRENT_STATUS_CLOSE 0
 
 /********************任务类型********************************/
 #define TASKTYPE_SHOWALL -1
@@ -68,6 +74,9 @@
 #define TASKTYPE_SCRAP   4
 #define TASKTYPE_CHECK   5
 
+/***************************************************/
+#define SERIALLOOP_TIMER 1000 // 暂时1S**********************
+/***************************************************/
 extern QString userName;
 extern int userId;
 extern int userRole;
@@ -75,7 +84,6 @@ extern int userRole;
 extern int NetWorkStatus;
 extern int resetSignal;//重置信号
 extern int SerialPortStatus;//判断网络创建
-extern int send_positionNo_G[64];
 
 extern bool isQuitLoopRequestAgentiaStatus;//false 退出 true 继续
 extern bool isClickReturnPB;
@@ -84,6 +92,18 @@ extern int groupId;
 extern QString CABINETNO;
 extern QString VERSION;
 
+/*************serialport*******************/
+extern SerialPortWorking *serialPortControl;
+extern bool is_ARM_receivedReply_from_MCU;
+extern bool is_OpenSerialPort;
+extern int currentLockStatus;
+extern int is_MCU_taskExecuteStatus;
+extern int send_positionNo_G[64];
+extern int cabinet_drawer_num;
+
+
+
+/******************************/
 
 
 

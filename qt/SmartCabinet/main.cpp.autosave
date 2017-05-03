@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
 
 
     Initprocess initStartProgress;
-
-    initStartProgress.ReadConfig();
+    //之后会讲配置信息重新改写
     initStartProgress.CreateSql();
+    initStartProgress.ReadConfig();
     if (initStartProgress.Upgrade())
     {
         initStartProgress.StartSerialPortThread();

@@ -1,23 +1,30 @@
 #include "initprocess.h"
 #include "common/uart4stm.h"
 #include "network/netcommunication.h"
+#include "inputnew/frminputnew.h"
+#include "common/timerandupdate.h"
+#include "common/Sql_Setting.h"
+#include "common/serialportworking.h"
+
 #include <QDebug>
 #include <QSqlQuery>
-#include "inputnew/frminputnew.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QProcess>
+#include <QMessageBox>
+#include <QThread>
 
 Initprocess::Initprocess(QObject *parent) :
     QObject(parent)
 {
-    init_threadControl = new ThreadControl(this);
     updateSQL = new UpdateSQL(this);
-    connect(init_threadControl, SIGNAL(Update_SQL()), this, SLOT(UpdateLocalSql()));
-    connect(init_threadControl, SIGNAL(Close_ALLPage()), this, SLOT(Quit_Login()));
 }
 
+Initprocess::~Initprocess()
+{
+
+}
 
 void Initprocess::ReadConfig()
 {
@@ -39,19 +46,16 @@ void Initprocess::CreateSql()
     }
 }
 
-void Initprocess::OpenSerialPort()
+void Initprocess::StartSerialPortThread()
 {
+    SerialPortWorking *serialport = new SerialPortWorking;
+    QThread *serialPort_thread = new QThread;
+    serialport->moveToThread(serialPort_thread);
+    serialPort_thread->start();
 
-}
+    emit CreateSerialPort();
+    connect(this, SIGNAL(CreateSerialPort()), serialport, SLOT(CreateSerialPort()));
 
-void Initprocess::CreateThread()
-{
-    init_threadControl->CreateThread();
-}
-
-void Initprocess::StartThread()
-{
-    init_threadControl->ControlTimerThread(OPEN_THREAD);
 }
 
 void Initprocess::ShowLoginPage()
@@ -90,10 +94,15 @@ bool Initprocess::Upgrade()
         {
             if(armVersion != VERSION)
             {
-                QProcess *proe = new QProcess;
-                proe->startDetached("./untitled4");
-                this->deleteLater();
-                return false;
+                int ret = QMessageBox::warning(NULL,tr("更新"), tr("是否立即更新?"), \
+                                               QMessageBox::Ok , QMessageBox::No);
+                if (ret == QMessageBox::Ok)
+                {
+                    QProcess *proe = new QProcess;
+                    proe->startDetached("./untitled4");
+                    this->deleteLater();
+                    return false;
+                }
             }
         }
     }
@@ -121,4 +130,12 @@ bool Initprocess::UnpackVersion(QJsonDocument jd , QString *armVersion, QString 
         return false;
 
     return true;
+}
+
+void Initprocess::Start_Autoscan()
+{
+    TimerAndUpdate *timerAndUpdate = new TimerAndUpdate;
+
+    connect(timerAndUpdate, SIGNAL(Timer_Task_Quit()), this, SLOT(Quit_Login()));
+    connect(timerAndUpdate, SIGNAL(Timer_Task_UpdateSQL()), this, SLOT(UpdateLocalSql()));
 }

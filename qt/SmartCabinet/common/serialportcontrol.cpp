@@ -76,7 +76,7 @@ void SerialPortControl::HandleFlow(int DID, int send_ActNum)
 }
 
 //查询锁的状态
-bool SerialPortControl:: RequestLockStauts(int DID)
+bool SerialPortControl::RequestLockStauts(int DID)
 {
     int lockStatus = RequestDrawerLock(DID);//CLOSE 0 OPEN 1
 

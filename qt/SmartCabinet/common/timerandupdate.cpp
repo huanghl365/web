@@ -7,7 +7,7 @@ TimerAndUpdate::TimerAndUpdate(QObject *parent) :
     QTimer(parent)
 {
     timer_10s = new QTimer;
-    accessManager = new QNetworkAccessManager(this);
+    accessManager = new QNetworkAccessManager;
 
     timeCount_returnAndUpdate = 0;
     timeCount_sendNeedInfo = 0;
@@ -18,6 +18,12 @@ TimerAndUpdate::TimerAndUpdate(QObject *parent) :
     connect(accessManager, SIGNAL(finished(QNetworkReply*)), this,\
             SLOT(replyFinished(QNetworkReply*)));
 
+}
+
+TimerAndUpdate::~TimerAndUpdate()
+{
+    timer_10s->deleteLater();
+    accessManager->deleteLater();
 }
 
 void TimerAndUpdate::TestThread()
