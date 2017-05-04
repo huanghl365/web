@@ -1,6 +1,7 @@
 #include "dg_execcheck.h"
 #include "ui_dg_execcheck.h"
 #include "common/globalvariable.h"
+#include "common/uart4stm.h"
 
 #include <QJsonValue>
 #include <QJsonDocument>
@@ -25,10 +26,11 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
 
     /******initially******/
     save_drawer.clear();
-    save_position.clear();
     save_number.clear();
+    save_position.clear();
     save_previousErrorPosition.clear();
     save_warningInfo.clear();
+    save_outstripTimer.clear();
     save_needDel.clear();
 
     //变量初始化
@@ -45,7 +47,9 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
 
     /*********************/
     count = 0;
-    tableName = "T_AgentiaReturnExecute";
+    tableName = "T_AgentiaExecute";
+    isContinueExecute = true;
+    isPBjump = false;
 
     /*******************************/
 
@@ -56,8 +60,7 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
             serialPortControl_G, SLOT(Model_A(int,int)));
 
 
-
-
+    All_Control();
 }
 
 Dg_ExecCheck::~Dg_ExecCheck()
@@ -70,57 +73,102 @@ Dg_ExecCheck::~Dg_ExecCheck()
 /******************************/
 bool Dg_ExecCheck::All_Control()
 {
+    int status = -3;
+
+    SetTitle("点验操作");
     ControlTimer("close");
     ShowPage();
     if(CheckTable_haveData(tableName))
     {
         GetDrawerAndPosition();
-        while (NextTask())
+
+        while (NextTask()&&isContinueExecute)
         {
             ShowCurrentAgentiaInfo(count);
             Send_TaskInfo2MCU();
-            waitTime(1000);
+            waitTime(2000);
             if (CheckTask_isSendSuccess())
             {
-                int status = CheckDrawerTaskStatus();
-
                 while (CheckLock_isOpen())
                 {
+                    status = CheckDrawerTaskStatus();
+
                     if (status == TASK_ERROR)
                         HandleTask(haveErrorHandle);
                     else if (status == TASK_HAVENOTEXEC)
+                    {
                         HandleTask(haveNotExecTask);
+                        if (isPBjump && !Is_DrawerNo_Equal())
+                            TextMessageShowContent("", "请关闭抽屉");
+                        else if (isPBjump && Is_DrawerNo_Equal())
+                        {
+                            isPBjump = false;
+                            break;
+                        }
+                    }
                     else if (status == TASK_OVER)
+                    {
                         HandleTask(havetaskOver);
 
-                    waitTime(500);
-                }
+                        if (!Is_DrawerNo_Equal())
+                            TextMessageShowContent("", "请关闭抽屉");
+                        else
+                            break;
+                    }
 
+
+                    if (!isContinueExecute)
+                    {
+                        while(CheckLock_isOpen())
+                        {
+                            TextMessageShowContent("", "请关闭抽屉");
+                        }
+                        break;
+                    }
+                }
                 if (!CheckLock_isOpen())
                 {
                     if (status == TASK_ERROR)
                         HandleTask(haveErrorHandle_CLOSE);
-                    else if (status == TASK_HAVENOTEXEC)
-                        HandleTask(haveNotExecTask_CLOSE);
-                    else if (status == TASK_OVER)
-                        HandleTask(havetaskOver_CLOSE);
                 }
             }
 
+            if (status == TASK_HAVENOTEXEC)
+                HandleTask(haveNotExecTask_CLOSE);
+            else if (status == TASK_OVER)
+                HandleTask(havetaskOver_CLOSE);
+
+            ShowCurrentAgentiaInfo(count);
             GetError();//异常上报
+            FlagInit();
+            count++;
         }
 
+        ShowCurrentAgentiaInfo(save_drawer.size());
         TextMessageShowContent("", "任务完成，正在执行上报，请稍候");
+        waitTime(2000);
         UploadTask2Server();
     }
-    else
-        ClosePage();
 
     ControlTimer("open");
 
+    ClosePage();
+    Change_SQL_Table("在位");
 }
 
 /*****************************/
+
+bool Dg_ExecCheck::Is_DrawerNo_Equal()
+{
+    if (count < save_drawer.size() -1 )
+    {
+        if (save_drawer[count] == save_drawer[count + 1])
+            return true;
+    }
+
+    return false;
+}
+
 bool Dg_ExecCheck::CheckTable_haveData(QString tableName)
 {
 
@@ -136,8 +184,12 @@ bool Dg_ExecCheck::CheckTable_haveData(QString tableName)
 
 bool Dg_ExecCheck::CheckLock_isOpen()
 {
+    emit Request_Lock(save_drawer[count]);
+    waitTime(1000);
     if (currentLockStatus)
+    {
         return true;
+    }
 
     return false;
 }
@@ -310,7 +362,6 @@ void Dg_ExecCheck::InitializeStruct()
 
 bool Dg_ExecCheck::NextTask()
 {
-    count++;
 
     if ( count < save_drawer.size())
     {
@@ -385,7 +436,7 @@ void Dg_ExecCheck::WriteSQL_NetworkError()
     query->exec();
 }
 
-void Dg_ExecCheck::Change_SQL_Table()
+void Dg_ExecCheck::Change_SQL_Table(QString name)//"在位"  "借出"
 {
     t_exec->select();
 
@@ -405,7 +456,7 @@ void Dg_ExecCheck::Change_SQL_Table()
     {
         query->prepare(QString("update T_AgentiaSaving set judgeAttitude='%1',userDisplayName='%2' \
                                where agentiaName='%3'")
-               .arg("在位").arg("").arg(save_needDel[j]));
+               .arg(name).arg("").arg(save_needDel[j]));
         query->exec();
     }
     save_needDel.clear();
@@ -557,13 +608,24 @@ void Dg_ExecCheck::TextMessageShowContent(QString colorType, QString content)
 
 void Dg_ExecCheck::isSaveError(int goal)
 {
+    int value = 0;
+
     if (!save_previousErrorPosition.empty())
     {
         for (int i = 0; i < save_previousErrorPosition.size(); i++)
         {
             if (goal == save_previousErrorPosition[i])
             {
-                save_warningInfo.append(goal);//预备上传内容
+                value = save_outstripTimer[goal];
+                if (value >= 5)
+                {
+                    if (save_warningInfo.indexOf(goal) == -1)
+                    {
+                        save_warningInfo.append(goal);//预备上传内容
+                    }
+                    save_outstripTimer[goal] = 0;
+                }
+                save_outstripTimer[goal] = value + 1;
                 break;
             }
         }
@@ -578,7 +640,7 @@ void Dg_ExecCheck::SetInputReg()
     ui->lE_volum->setValidator(validator_bottleCapacity);
 }
 
-void Dg_ExecCheck::ChangeStatus(QString content)
+void Dg_ExecCheck::ChangeStatus_SingleTask(QString content)
 {
     QString info = t_exec->data(t_exec->index(0, s_judgeStatusColumn)).toString();
     QString judge = "审批";
@@ -594,6 +656,50 @@ void Dg_ExecCheck::ChangeStatus(QString content)
 
     t_exec->submitAll();
     qDebug()<< t_exec->data(t_exec->index(0, s_judgeStatusColumn)).toString();
+}
+
+void Dg_ExecCheck::ChangeStatus_MulTask(QString content)
+{
+    int rowCount = t_exec->rowCount();
+    if (content == "跳过")
+    {
+        if (0 != Alarm_No[2][0])
+        {
+            for (int i = 0; i < 64; i++)
+            {
+                if (0 != Alarm_No[2][i])
+                {
+                    for(int i = 0; i < rowCount; i++)
+                    {
+                        int position = t_exec->data(t_exec->index(i, s_positioinColumn)).toInt();
+                        if (position == Alarm_No[2][i])
+                        {
+                            QString info = t_exec->data(t_exec->index(i, s_judgeStatusColumn)).toString();
+
+                            if (info == "审批" )
+                            {
+                                t_exec->setData(t_exec->index(i, s_judgeStatusColumn), "审批跳过");
+                            }
+                            else
+                            {
+                                t_exec->setData(t_exec->index(i, s_judgeStatusColumn), "跳过");
+                            }
+
+                            t_exec->submitAll();
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (content == "完成")
+    {
+        for (int i = 0; i < rowCount; i++)
+        {
+            ChangeCellContent(i, s_judgeStatusColumn, "完成");
+        }
+    }
+    t_exec->submitAll();
 }
 
 void Dg_ExecCheck::ChangeCellContent(int row, int column, QString content)
@@ -617,40 +723,112 @@ void Dg_ExecCheck::ClosePage()
     this->deleteLater();
 }
 
+void Dg_ExecCheck::FlagInit()
+{
+    isPBjump = false;
+}
+
+void Dg_ExecCheck::SetTitle(QString name)
+{
+    ui->lB_title->setText(name);
+}
+
 void Dg_ExecCheck::HandleTask(int order)
 {
     switch (order) {
     case haveErrorHandle:
+    {
+        if (0 != Alarm_No[0][0])
+        {
+            QString warning = "有错误操作，记录位置：";
+            for (int i = 0; i < 64; i++)
+            {
+                if (0 != Alarm_No[0][i])
+                {
+                    warning += QString::number(Alarm_No[0][i])+", ";
+                    isSaveError(Alarm_No[0][i]);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            warning = warning + "    请纠正";
+            ui->textB_message->setText(warning);
+        }
+
+        save_previousErrorPosition.clear();
+        for (int i = 0; i < 64; i++)
+        {
+            if (0 != Alarm_No[0][i])
+            {
+                save_previousErrorPosition[i] = Alarm_No[0][i];
+            }
+            else
+                break;
+        }
 
         break;
+    }
     case haveNotExecTask:
+    {
+        if (0 != Alarm_No[2][0])
+        {
+            QString warning = "有未完成，位置为： ";
+            for (int i = 0; i < 64; i++)
+            {
+                if (0 != Alarm_No[2][i])
+                {
+                    warning += QString::number(Alarm_No[2][i])+", ";
+                }
+                else
+                {
+                    break;
+                }
+            }
+            warning = warning + "   可点击按钮跳过";
+            TextMessageShowContent("", warning);
+        }
 
         break;
-
+    }
     case havetaskOver:
-
+    {
+        TextMessageShowContent("", "任务完成，正在执行上报，请稍候");
         break;
-
+    }
     case haveErrorHandle_CLOSE:
+    {
+        isContinueExecute = false;
+        QString str = netCommunication->PackageJson_warningLog(userId,QString("非法操作，机柜编号:%1  抽屉编号编号：%2").arg(CABINETNO).arg(save_drawer[count]));
+        UploadWarning(str, QString("非法操作，机柜编号:%1  抽屉编号编号：%2").arg(CABINETNO).arg(save_drawer[count]), Drawer_error);
+        UploadDisableDrawerAndPosition();
 
         break;
-
+    }
     case haveNotExecTask_CLOSE:
-
+    {
+        ChangeStatus_SingleTask("跳过");
         break;
-
+    }
     case havetaskOver_CLOSE:
-
+    {
+        TextMessageShowContent("", "操作无误");
+        ChangeStatus_SingleTask("完成");
         break;
-
+    }
     case PB_jump:
+    {
+        isPBjump = true;
 
         break;
-
+    }
     case PB_return:
+    {
+        isContinueExecute = false;
 
         break;
-
+    }
     default:
         break;
     }

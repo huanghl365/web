@@ -22,7 +22,7 @@ public:
 signals:
     void ControlTimer_SerialPort(bool _switch);
     void TaskCommand_Send2MCU(int DID, int send_ActNum);
-
+    void Request_Lock(int drawer_ID);
 
 private slots:
     void on_pB_sure_clicked();
@@ -37,18 +37,22 @@ private:
     QSqlQuery *query;
     NetCommunication *netCommunication;
     int count;
+
+    bool isContinueExecute;
+    bool isPBjump;
+
     QString tableName;
 
-    enum{NetworkTask, haveErrorHandle, haveNotExecTask, havetaskOver, PB_jump, PB_return,\
-        haveErrorHandle_CLOSE, haveNotExecTask_CLOSE, havetaskOver_CLOSE};
+    enum{NetworkTask, Drawer_error, haveErrorHandle, haveNotExecTask, havetaskOver, PB_jump, PB_return,\
+        haveErrorHandle_CLOSE, haveNotExecTask_CLOSE, havetaskOver_CLOSE,};
 
-
-    QMap <int, int> save_drawer;
+    QList <QString> save_needDel;
     QMap <int, int> save_position;
     QMap <int, int> save_number;
     QMap <int, int> save_previousErrorPosition;
-    QList<int> save_warningInfo;
-    QList <QString> save_needDel;
+    QMap <int, int> save_outstripTimer;
+    QList <int> save_warningInfo;
+    QList <int> save_drawer;
 
     struct Save_AgentiaInfo{
         int getC_agentiaId;
@@ -77,6 +81,8 @@ private:
     bool CheckTable_haveData(QString tableName);
     //检查锁状态
     bool CheckLock_isOpen();
+    //检测是否是同一柜子
+    bool Is_DrawerNo_Equal();
     //指令发送结果
     bool CheckTask_isSendSuccess();
     //任务状况
@@ -97,7 +103,8 @@ private:
     bool UnpackageJson_Task(QJsonDocument str);
     //修改单元格内容
     void ChangeCellContent(int row, int column, QString content);
-    void ChangeStatus(QString content);
+    void ChangeStatus_SingleTask(QString content);
+    void ChangeStatus_MulTask(QString content);
     //设置提示框内容
     void TextMessageShowContent(QString colorType, QString content);
     //等待当前锁关闭
@@ -113,7 +120,7 @@ private:
     void UploadWarning(QString json_str, QString warningContent, int model);
     void UploadDisableDrawerAndPosition();
     //离线本地修改状态
-    void Change_SQL_Table();
+    void Change_SQL_Table(QString name);//"在位"  "借出"
     //检测错误是否存在
     void isSaveError(int goal);
     //设置输入格式
@@ -124,6 +131,11 @@ private:
     void ControlTimer(QString status);
     //处理任务状态
     void HandleTask(int order);
+    //初始化标志位
+    void FlagInit();
+    //设置标题
+    void SetTitle(QString name);
+
 
 };
 

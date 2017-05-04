@@ -56,7 +56,7 @@
 #define TASK_HAVENOTEXEC   1
 #define TASK_OVER          2
 #define TASK_NOTREPLY      -1
-#define TASK_OFFWORKING   -2
+#define TASK_OFFWORKING    -2
 /****************抽屉状态**************************/
 #define DRAWEROPEN  1
 #define DRAWERCLOSE 0

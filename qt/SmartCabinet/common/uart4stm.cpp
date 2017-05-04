@@ -169,7 +169,8 @@ int RequestAlarm(QSerialPort* uartfd,int DID)//0xE0 请求报警信息
 
 int wait4SetAct(int DID,int send_ActNum,int *send_positionNo)//设置Act
 {
-    int i,j;
+
+    int i;
     unsigned char DataAct[8] = {0};
     for(int ActNo = 0;ActNo < send_ActNum;ActNo++)
     {
@@ -193,7 +194,7 @@ int wait4SetAct(int DID,int send_ActNum,int *send_positionNo)//设置Act
 
 int wait4SendAct(int DID,int ActMode)//发送任务完成指令
 {
-    int i,j;
+    int i;
     for(i=0;i<3;i++)
     {
         if(myCom->bytesAvailable()>0)
@@ -240,7 +241,7 @@ void AnalyzeAlarm()    //解析警报信息
 
 int wait4Alarm(int DID)
 {
-    int i,j;
+    int i;
     for(i=0;i<3;i++)
     {
         if(myCom->bytesAvailable()>0)
@@ -471,6 +472,8 @@ int IntoDrawer(int DrawerNo)
         {
             if(!opendrawer(DrawerNo))
                 return -1;
+
+            waitTaskInfo(1000);
             drawerState = RequestDrawerLock(DrawerNo);
             if(drawerState == DRAWER_OPEN)
                 return 0;

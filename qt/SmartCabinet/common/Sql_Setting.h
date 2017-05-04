@@ -86,8 +86,12 @@ static bool createConnection()
     query.exec(QString("insert into T_AgentiaSaving values (1,'1酒精','借出','小鸭子','100ml','400ml',1,1,'2010.7.7',1,123,2,1,1,1)"));
     query.exec(QString("insert into T_AgentiaSaving values (2,'2酒精','借出','','200ml','500ml',2,2,'2010.7.7',1,123,2,2,0,0)"));
     query.exec(QString("insert into T_AgentiaSaving values (3,'3酒精','在位','','300ml','600ml',2,1,'2010.7.7',1,123,2,2,0,0)"));
-    query.exec(QString("insert into T_AgentiaSaving values (4,'4酒精','在位','','400ml','700ml',1,2,'2010.7.7',1,123,2,1,0,0)"));
-//       query.exec(QString("insert into T_AgentiaSaving values (5,'高锰酸钾','在位','300ml','600ml',3,3,'2010.7.7',2,123,2)"));
+    query.exec(QString("insert into T_AgentiaSaving values (4,'4酒精','在位','','400ml','700ml',2,2,'2010.7.7',1,123,2,1,0,0)"));
+    query.exec(QString("insert into T_AgentiaSaving values (5,'4酒精','在位','','400ml','700ml',2,3,'2010.7.7',1,123,2,1,0,0)"));
+//    query.exec(QString("insert into T_AgentiaSaving values (6,'4酒精','在位','','400ml','700ml',1,2,'2010.7.7',1,123,2,1,0,0)"));
+//    query.exec(QString("insert into T_AgentiaSaving values (7,'4酒精','在位','','400ml','700ml',1,1,'2010.7.7',1,123,2,1,0,0)"));
+
+               //       query.exec(QString("insert into T_AgentiaSaving values (5,'高锰酸钾','在位','300ml','600ml',3,3,'2010.7.7',2,123,2)"));
 //       query.exec(QString("insert into T_AgentiaSaving values (6,'氯化钾','在位','400ml','700ml',3,4,'2010.7.7',2,123,2)"));
 //     query.exec(QString("insert into T_AgentiaReturnSave values (1,'1酒精','未摆放','600ml','300ml',1,2,'2010.7.7',1,123,2)"));
 

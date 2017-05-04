@@ -11,12 +11,8 @@
 SerialPortWorking::SerialPortWorking(QObject *parent) : QObject(parent)
 {
     netCommunication = new NetCommunication;
-    timer = new QTimer;
 
-    timer->start(SERIALLOOP_TIMER);
-    timer->stop();
 
-    connect(timer, SIGNAL(timeout()), this, SLOT(Model_B()));
 }
 
 SerialPortWorking::~SerialPortWorking()
@@ -31,32 +27,41 @@ SerialPortWorking::~SerialPortWorking()
 //处理ARM执行指令
 void SerialPortWorking::Model_A(int drawer_ID, int send_TaskNum)
 {
-    bool isContinueExecute = false;
+    qDebug()<<"Model_A   "<<QThread::currentThreadId();
+    bool isContinueExecute_S = false;
+    int lockStaut_frequency = 0;
 
     Received_MCU_TaskEndReply(drawer_ID);
 
     if (Juage_MCU_ReceivedCommand(drawer_ID, send_TaskNum))
     {
+
+        OpenLock(drawer_ID);
         int status_Lock = Request_LockStatus(drawer_ID);
         if (LOCK_CURRENT_STATUS_CLOSE == status_Lock)
-        {
-            if (!OpenLock(drawer_ID))
-                DrawerAbnormal(drawer_ID);
-            else
-                isContinueExecute = true;
-        }
+            isContinueExecute_S = false;
         else if (LOCK_CURRENT_STATUS_OPEN == status_Lock)
-            isContinueExecute = true;
+            isContinueExecute_S = true;
         else if (LOCK_CURRENT_STATUS_FAIL == status_Lock)
             DrawerAbnormal(drawer_ID);
 
-
-        if (isContinueExecute)
-            while (LOCK_CURRENT_STATUS_OPEN == Request_LockStatus(drawer_ID))
+        while (isContinueExecute_S)
+        {
+            Request_DrawerAlarm(drawer_ID);
+            WaitTimer(500);
+            if (lockStaut_frequency > 9)
             {
-                Request_DrawerAlarm(drawer_ID);
-                WaitTimer(2000);
+                if (LOCK_CURRENT_STATUS_CLOSE == Request_LockStatus(drawer_ID))
+                {
+                    break;
+
+                }
             }
+            else
+            {
+                lockStaut_frequency++;
+            }
+        }
     }
     else
         DrawerAbnormal(drawer_ID);
@@ -86,7 +91,7 @@ void SerialPortWorking::Model_B()
 /************************************************************************/
 bool SerialPortWorking::Juage_MCU_ReceivedCommand(int drawer_ID, int &send_TaskNum)
 {
-    is_ARM_receivedReply_from_MCU = true;
+    is_ARM_receivedReply_from_MCU = false;
 
     int mcu_receivedReply = wait4SetAct(drawer_ID, send_TaskNum, send_positionNo_G);
 
@@ -95,7 +100,6 @@ bool SerialPortWorking::Juage_MCU_ReceivedCommand(int drawer_ID, int &send_TaskN
         is_ARM_receivedReply_from_MCU = true;
         return true;
     }
-
     return false;
 }
 
@@ -183,6 +187,7 @@ void SerialPortWorking::Save_Ban_to_SQL(QString json_str, QString ban_object)
 
 void SerialPortWorking::ControlTimer(bool order)
 {
+    qDebug() << order;
     if (true == order)
         timer->start();
 
@@ -215,20 +220,18 @@ void SerialPortWorking::DrawerAbnormal(int &drawer_ID)
 void SerialPortWorking::Received_MCU_TaskEndReply(int &drawerID)
 {
     //ActMode 暂时为0即可：任务完成
-    if (0 != wait4SendAct(drawerID, 0))
-        for (int i = 0; i < 3; i++)
-        {
-            if (0 == wait4SendAct(drawerID, 0))
-                break;
-        }
+    wait4SendAct(drawerID, 0);
+
 }
 
 void SerialPortWorking::CreateSerialPort()
 {
     is_OpenSerialPort = false;
+    timer = new QTimer;
+    timer->start(SERIALLOOP_TIMER);
+    timer->stop();
+    connect(timer, SIGNAL(timeout()), this, SLOT(Model_B()));
 
-    if (1 == checkSerialPort())
-        closeSerialPort();
 
     qDebug()<<"serialPort thread:  "<< QThread::currentThreadId();
     qDebug()<<"00----------00----------00";
@@ -237,5 +240,8 @@ void SerialPortWorking::CreateSerialPort()
         is_OpenSerialPort = true;
 }
 
-
+void SerialPortWorking::ARM_Request_LockStatus(int drawer_ID)
+{
+    Request_DrawerAlarm(drawer_ID);
+}
 

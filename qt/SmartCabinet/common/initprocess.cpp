@@ -52,9 +52,9 @@ void Initprocess::StartSerialPortThread()
     serialPortControl_G->moveToThread(serialPort_thread);
     serialPort_thread->start();
 
-    emit CreateSerialPort();
     connect(this, SIGNAL(CreateSerialPort()), serialPortControl_G, SLOT(CreateSerialPort()));
 
+    emit CreateSerialPort();
 }
 
 void Initprocess::ShowLoginPage()

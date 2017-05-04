@@ -91,9 +91,9 @@ void TimerAndUpdate::GetHttp()
     request->setUrl(QUrl(QString("http://121.43.159.215:3000/arm/heartBeating")));
     accessManager->get(*request);
 
-#ifdef TEST
+//#ifdef TEST
     qDebug() << QThread::currentThreadId() <<"  Get-----workThread";
-#endif
+//#endif
 }
 
 void TimerAndUpdate::replyFinished(QNetworkReply *reply)
