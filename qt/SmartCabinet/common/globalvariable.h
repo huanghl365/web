@@ -100,6 +100,8 @@ extern int currentLockStatus;
 extern int is_MCU_taskExecuteStatus;
 extern int send_positionNo_G[64];
 extern int cabinet_drawer_num;
+extern bool is_MCU_Completesendcommandtask;
+extern bool is_MCU_CompleteCheckLockStatus;
 
 
 

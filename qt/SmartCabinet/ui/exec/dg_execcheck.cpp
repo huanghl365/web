@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QSqlQuery>
+#include <QDateTime>
 
 #include <QMap>
 
@@ -59,6 +60,9 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
     connect(this, SIGNAL(TaskCommand_Send2MCU(int,int)), \
             serialPortControl_G, SLOT(Model_A(int,int)));
 
+    connect(this, SIGNAL(Request_Lock(int)), \
+            serialPortControl_G, SLOT(ARM_Request_LockStatus(int)));
+
 
     All_Control();
 }
@@ -80,21 +84,28 @@ bool Dg_ExecCheck::All_Control()
     ShowPage();
     if(CheckTable_haveData(tableName))
     {
-        GetDrawerAndPosition();
+        GetDrawerAndPosition_Singletaske();
+        /**********/
+
+//        GetDrawer();
+        /***********/
 
         while (NextTask()&&isContinueExecute)
         {
             ShowCurrentAgentiaInfo(count);
-            Send_TaskInfo2MCU();
-            waitTime(2000);
+            Send_TaskInfo2MCU_Single();
+//            Send_TaskInfo2MCU_Mul();
             if (CheckTask_isSendSuccess())
             {
+                Initiative_CheckLock();
                 while (CheckLock_isOpen())
                 {
                     status = CheckDrawerTaskStatus();
 
                     if (status == TASK_ERROR)
+                    {
                         HandleTask(haveErrorHandle);
+                    }
                     else if (status == TASK_HAVENOTEXEC)
                     {
                         HandleTask(haveNotExecTask);
@@ -105,6 +116,7 @@ bool Dg_ExecCheck::All_Control()
                             isPBjump = false;
                             break;
                         }
+
                     }
                     else if (status == TASK_OVER)
                     {
@@ -116,21 +128,23 @@ bool Dg_ExecCheck::All_Control()
                             break;
                     }
 
-
                     if (!isContinueExecute)
                     {
                         while(CheckLock_isOpen())
-                        {
                             TextMessageShowContent("", "请关闭抽屉");
-                        }
+
                         break;
                     }
+
                 }
-                if (!CheckLock_isOpen())
+                if (0 == currentLockStatus)
                 {
                     if (status == TASK_ERROR)
                         HandleTask(haveErrorHandle_CLOSE);
                 }
+
+                waitTime(500);
+
             }
 
             if (status == TASK_HAVENOTEXEC)
@@ -145,13 +159,10 @@ bool Dg_ExecCheck::All_Control()
         }
 
         ShowCurrentAgentiaInfo(save_drawer.size());
-        TextMessageShowContent("", "任务完成，正在执行上报，请稍候");
-        waitTime(2000);
         UploadTask2Server();
     }
 
     ControlTimer("open");
-
     ClosePage();
     Change_SQL_Table("在位");
 }
@@ -171,7 +182,6 @@ bool Dg_ExecCheck::Is_DrawerNo_Equal()
 
 bool Dg_ExecCheck::CheckTable_haveData(QString tableName)
 {
-
     query->exec(QString("select * from %1").arg(tableName));
     query->last();
     int rowCount = query->at() + 1;
@@ -184,8 +194,8 @@ bool Dg_ExecCheck::CheckTable_haveData(QString tableName)
 
 bool Dg_ExecCheck::CheckLock_isOpen()
 {
-    emit Request_Lock(save_drawer[count]);
-    waitTime(1000);
+
+
     if (currentLockStatus)
     {
         return true;
@@ -196,6 +206,12 @@ bool Dg_ExecCheck::CheckLock_isOpen()
 
 bool Dg_ExecCheck::CheckTask_isSendSuccess()
 {
+    is_MCU_Completesendcommandtask = false;
+    while(!is_MCU_Completesendcommandtask)
+    {
+        waitTime(50);
+    }
+
     if (is_ARM_receivedReply_from_MCU)
         return true;
 
@@ -272,6 +288,16 @@ void Dg_ExecCheck::ShowPage()
     ui->TV_exec->sortByColumn(6, Qt::AscendingOrder);
 }
 
+void Dg_ExecCheck::Initiative_CheckLock()
+{
+    emit Request_Lock(save_drawer[count]);
+    is_MCU_CompleteCheckLockStatus = false;
+    while(!is_MCU_CompleteCheckLockStatus)
+    {
+        waitTime(100);
+    }
+}
+
 void Dg_ExecCheck::ShowCurrentAgentiaInfo(int i)
 {
     QString num = "";
@@ -283,7 +309,7 @@ void Dg_ExecCheck::ShowCurrentAgentiaInfo(int i)
     t_exec->setFilter(QString("id like '%%1%'").arg(num));//筛选结果
 }
 
-void Dg_ExecCheck::GetDrawerAndPosition()
+void Dg_ExecCheck::GetDrawerAndPosition_Singletaske()
 {
     int rowCount = t_exec->rowCount();
 
@@ -303,7 +329,41 @@ void Dg_ExecCheck::GetDrawerAndPosition()
     }
 }
 
-void Dg_ExecCheck::Send_TaskInfo2MCU()
+//获取抽屉号
+void Dg_ExecCheck::GetDrawer()
+{
+    save_drawer.clear();
+    int rowCount = t_exec->rowCount();
+
+    int currentDrawer = -1;
+    int preDrawerNo = -1;
+
+    for (int i = 0; i < rowCount; i++)
+    {
+        currentDrawer = t_exec->data(t_exec->index(i, s_drawerColumn)).toInt();
+
+        if (preDrawerNo != currentDrawer)
+        {
+            preDrawerNo = currentDrawer;
+            save_drawer.append(currentDrawer);
+        }
+    }
+}
+
+void Dg_ExecCheck::GetPositionNum()
+{
+    int rowCount = t_exec->rowCount();
+    int currentPosition = -1;
+    save_position.clear();
+
+    for (int i = 0; i < rowCount; i++)
+    {
+        currentPosition = t_exec->data(t_exec->index(i, s_positioinColumn)).toInt();
+        save_position.insert(i, currentPosition);
+    }
+}
+
+void Dg_ExecCheck::Send_TaskInfo2MCU_Single()
 {
     int drawer_ID = save_drawer[count];
     int send_ActNum = 1;
@@ -311,6 +371,23 @@ void Dg_ExecCheck::Send_TaskInfo2MCU()
 
     emit TaskCommand_Send2MCU(drawer_ID, send_ActNum);
 
+}
+
+void Dg_ExecCheck::Send_TaskInfo2MCU_Mul()
+{
+    //获取位置
+    GetPositionNum();
+    for (int i = 0; i < 64; i++)
+    {
+        send_positionNo_G[0] = 0;
+    }
+    for (int i = 0; i < save_position.size(); i++)
+    {
+        send_positionNo_G[i] = save_position[i];
+    }
+
+    int drawer_ID = save_drawer[count];
+    emit TaskCommand_Send2MCU(drawer_ID, save_position.size());
 }
 
 void Dg_ExecCheck::on_CB_return_clicked()
@@ -809,12 +886,14 @@ void Dg_ExecCheck::HandleTask(int order)
     case haveNotExecTask_CLOSE:
     {
         ChangeStatus_SingleTask("跳过");
+//        ChangeStatus_MulTask("跳过");
         break;
     }
     case havetaskOver_CLOSE:
     {
-        TextMessageShowContent("", "操作无误");
+//        TextMessageShowContent("", "操作无误");
         ChangeStatus_SingleTask("完成");
+        ChangeStatus_MulTask("完成");
         break;
     }
     case PB_jump:

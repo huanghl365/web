@@ -81,6 +81,7 @@ private:
     bool CheckTable_haveData(QString tableName);
     //检查锁状态
     bool CheckLock_isOpen();
+    void Initiative_CheckLock();
     //检测是否是同一柜子
     bool Is_DrawerNo_Equal();
     //指令发送结果
@@ -92,9 +93,13 @@ private:
     //显示任务信息
     void ShowCurrentAgentiaInfo(int i);
     //获取位置号
-    void GetDrawerAndPosition();
+    void GetDrawerAndPosition_Singletaske();
+    //mul get
+    void GetPositionNum();
+    void GetDrawer();
     //任务下发
-    void Send_TaskInfo2MCU();
+    void Send_TaskInfo2MCU_Single();
+    void Send_TaskInfo2MCU_Mul();
     //等待
     void waitTime(int time);
     //下一条任务

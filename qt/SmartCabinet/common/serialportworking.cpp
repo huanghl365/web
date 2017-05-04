@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QSqlQuery>
 #include <QTimer>
+#include <QDateTime>
 
 SerialPortWorking::SerialPortWorking(QObject *parent) : QObject(parent)
 {
@@ -35,7 +36,6 @@ void SerialPortWorking::Model_A(int drawer_ID, int send_TaskNum)
 
     if (Juage_MCU_ReceivedCommand(drawer_ID, send_TaskNum))
     {
-
         OpenLock(drawer_ID);
         int status_Lock = Request_LockStatus(drawer_ID);
         if (LOCK_CURRENT_STATUS_CLOSE == status_Lock)
@@ -48,27 +48,23 @@ void SerialPortWorking::Model_A(int drawer_ID, int send_TaskNum)
         while (isContinueExecute_S)
         {
             Request_DrawerAlarm(drawer_ID);
-            WaitTimer(500);
-            if (lockStaut_frequency > 9)
+            WaitTimer(200);
+            if (lockStaut_frequency > 4)
             {
                 if (LOCK_CURRENT_STATUS_CLOSE == Request_LockStatus(drawer_ID))
                 {
                     break;
-
                 }
+                lockStaut_frequency = 0;
             }
             else
-            {
                 lockStaut_frequency++;
-            }
         }
     }
     else
         DrawerAbnormal(drawer_ID);
 
-
     Received_MCU_TaskEndReply(drawer_ID);
-
 }
 
 /*************MODEL_B***********************************/
@@ -76,7 +72,7 @@ void SerialPortWorking::Model_A(int drawer_ID, int send_TaskNum)
 void SerialPortWorking::Model_B()
 {
     qDebug()<<"serialPort thread:  "<< QThread::currentThreadId();
-    qDebug() << "working---scan device";
+    qDebug() << "working--777777777--scan device";
 
 //    for (int i = 0; i > cabinet_drawer_num; i++)
 //    {
@@ -96,11 +92,14 @@ bool SerialPortWorking::Juage_MCU_ReceivedCommand(int drawer_ID, int &send_TaskN
     int mcu_receivedReply = wait4SetAct(drawer_ID, send_TaskNum, send_positionNo_G);
 
     if (0 == mcu_receivedReply)
-    {
         is_ARM_receivedReply_from_MCU = true;
+
+    is_MCU_Completesendcommandtask = true;
+
+    if (is_ARM_receivedReply_from_MCU)
         return true;
-    }
-    return false;
+    else
+        return false;
 }
 
 bool SerialPortWorking::OpenLock(int drawer_ID)
@@ -120,21 +119,19 @@ bool SerialPortWorking::OpenLock(int drawer_ID)
 
 int SerialPortWorking::Request_LockStatus(int &lock_ID)
 {
+
     int lockStatus = RequestDrawerLock(lock_ID);
 
     if (LOCK_CURRENT_STATUS_OPEN == lockStatus)
-    {
         currentLockStatus = LOCK_CURRENT_STATUS_OPEN;
-        return LOCK_CURRENT_STATUS_OPEN;
-    }
     else if (LOCK_CURRENT_STATUS_CLOSE == lockStatus)
-    {
         currentLockStatus = LOCK_CURRENT_STATUS_CLOSE;
-        return LOCK_CURRENT_STATUS_CLOSE;
-    }
+    else if (LOCK_CURRENT_STATUS_FAIL == lockStatus)
+        currentLockStatus = LOCK_CURRENT_STATUS_FAIL;
 
-    currentLockStatus = LOCK_CURRENT_STATUS_FAIL;
-    return LOCK_CURRENT_STATUS_FAIL;
+    is_MCU_CompleteCheckLockStatus = true;
+
+    return currentLockStatus;
 }
 /******************/
 
@@ -242,6 +239,6 @@ void SerialPortWorking::CreateSerialPort()
 
 void SerialPortWorking::ARM_Request_LockStatus(int drawer_ID)
 {
-    Request_DrawerAlarm(drawer_ID);
+    Request_LockStatus(drawer_ID);
 }
 

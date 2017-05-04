@@ -20,6 +20,6 @@ int is_MCU_taskExecuteStatus = TASK_OFFWORKING;
 int send_positionNo_G[64] = {0};
 int cabinet_drawer_num = 0;
 SerialPortWorking *serialPortControl_G = new SerialPortWorking;
-
-
+bool is_MCU_Completesendcommandtask = false;
+bool is_MCU_CompleteCheckLockStatus = false;
 /*************************/

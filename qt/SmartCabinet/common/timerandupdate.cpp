@@ -98,9 +98,9 @@ void TimerAndUpdate::GetHttp()
 
 void TimerAndUpdate::replyFinished(QNetworkReply *reply)
 {
-#ifdef TEST
+//#ifdef TEST
     qDebug() << QThread::currentThreadId() << " Reply-----workThread";
-#endif
+//#endif
 
     if (reply->error() == QNetworkReply::NoError)
     {
