@@ -3,7 +3,7 @@
 #include "common/updatesql.h"
 #include "common/globalvariable.h"
 #include "common/commonmodel.h"
-#include "ui/exec/dg_exectakein.h"
+#include "ui/exec/dg_takein_exec.h"
 #include "ui/common/dg_requestposition.h"
 #include <QSqlRecord>
 #include <QMessageBox>
@@ -279,12 +279,13 @@ void Dg_TakeIn::Write_Sql(QMap<int, QString> map, QString &name)
 
 void Dg_TakeIn::ShowExecuteWindow()
 {
-    Dg_ExecTakeIn *execTakeIn = new Dg_ExecTakeIn(this);
-    execTakeIn->show();
-    this->hide();
+    this->showMinimized();
+    Dg_TakeIn_Exec *execTakeIn = new Dg_TakeIn_Exec;
     resetSignal = HALTQUITPROCESS;//停止自动退出功能
 
     connect(execTakeIn, SIGNAL(destroyed()), this, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed(QObject*)), execTakeIn, SLOT(deleteLater()));
+
 }
 
 void Dg_TakeIn::DownLoad_TaskList()

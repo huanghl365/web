@@ -42,6 +42,7 @@ private:
     bool isPBjump;
 
     QString tableName;
+    QString modelChange;
 
     enum{NetworkTask, Drawer_error, haveErrorHandle, haveNotExecTask, havetaskOver, PB_jump, PB_return,\
         haveErrorHandle_CLOSE, haveNotExecTask_CLOSE, havetaskOver_CLOSE,};
@@ -100,6 +101,7 @@ private:
     //任务下发
     void Send_TaskInfo2MCU_Single();
     void Send_TaskInfo2MCU_Mul();
+    void Send_TaskCommandModelOptional(QString model);
     //等待
     void waitTime(int time);
     //下一条任务

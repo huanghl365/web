@@ -669,13 +669,9 @@ void Dg_ExecTakeOut::GetError()
         if (netCommunication->PostHttp("warningLog", str, 2))
         {
             if (UnpackageJson_Task(netCommunication->ServerReply))
-            {
                 isSuccess = true;
-            }
             else
-            {
                 isSuccess = false;
-            }
         }
         if (!isSuccess)
         {

@@ -41,7 +41,15 @@ SOURCES += main.cpp \
     ui/task/dg_scrap.cpp \
     ui/task/dg_replace.cpp \
     common/serialportworking.cpp \
-    ui/exec/dg_exectakeout.cpp
+    ui/exec/dg_exectakeout.cpp \
+    ui/exec/dg_execclass.cpp \
+    ui/exec/dg_takeout_exec.cpp \
+    ui/exec/dg_takein_exec.cpp \
+    ui/exec/dg_back_exec.cpp \
+    ui/exec/dg_checkpage_exec.cpp \
+    ui/exec/dg_scrap_exec.cpp \
+    ui/exec/dg_replace_exec.cpp \
+    ui/exec/dg_remove_exec.cpp
 
 HEADERS  += \
     ui/common/dg_loginpage.h \
@@ -70,7 +78,15 @@ HEADERS  += \
     ui/task/dg_remove.h \
     ui/task/dg_scrap.h \
     ui/task/dg_replace.h \
-    common/serialportworking.h
+    common/serialportworking.h \
+    ui/exec/dg_execclass.h \
+    ui/exec/dg_takeout_exec.h \
+    ui/exec/dg_takein_exec.h \
+    ui/exec/dg_back_exec.h \
+    ui/exec/dg_checkpage_exec.h \
+    ui/exec/dg_scrap_exec.h \
+    ui/exec/dg_replace_exec.h \
+    ui/exec/dg_remove_exec.h
 
 FORMS    += \
     ui/common/dg_loginpage.ui \
@@ -82,7 +98,8 @@ FORMS    += \
     ui/common/dg_requestposition.ui \
     ui/task/dg_takein.ui \
     ui/exec/dg_exectakein.ui \
-    ui/task/dg_taskclass.ui
+    ui/task/dg_taskclass.ui \
+    ui/exec/dg_execclass.ui
 
 RESOURCES += \
     resource/resoure.qrc

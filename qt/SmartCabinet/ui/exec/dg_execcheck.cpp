@@ -51,7 +51,7 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
     tableName = "T_AgentiaExecute";
     isContinueExecute = true;
     isPBjump = false;
-
+    modelChange = "";
     /*******************************/
 
     connect(this, SIGNAL(ControlTimer_SerialPort(bool)), \
@@ -360,6 +360,8 @@ void Dg_ExecCheck::GetPositionNum()
         save_position.insert(i, currentPosition);
     }
 }
+
+
 
 void Dg_ExecCheck::Send_TaskInfo2MCU_Single()
 {
@@ -883,16 +885,20 @@ void Dg_ExecCheck::HandleTask(int order)
         break;
     }
     case haveNotExecTask_CLOSE:
-    {
-        ChangeStatus_SingleTask("跳过");
-//        ChangeStatus_MulTask("跳过");
+    {    
+        if (modelChange == "Mul")
+            ChangeStatus_MulTask("跳过");
+        else if (modelChange == "Single")
+            ChangeStatus_SingleTask("跳过");
+
         break;
     }
     case havetaskOver_CLOSE:
     {
-//        TextMessageShowContent("", "操作无误");
-        ChangeStatus_SingleTask("完成");
-        ChangeStatus_MulTask("完成");
+        if (modelChange == "Mul")
+            ChangeStatus_MulTask("完成");
+        else if (modelChange == "Single")
+            ChangeStatus_SingleTask("完成");
         break;
     }
     case PB_jump:

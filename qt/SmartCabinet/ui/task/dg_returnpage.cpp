@@ -1,7 +1,7 @@
 #include "dg_returnpage.h"
 #include "ui_dg_returnpage.h"
 #include "common/globalvariable.h"
-#include "ui/exec/dg_execreturn.h"
+#include "ui/exec/dg_back_exec.h"
 #include <QMessageBox>
 
 Dg_ReturnPage::Dg_ReturnPage(QWidget *parent) :
@@ -88,11 +88,12 @@ void Dg_ReturnPage::ShowGUI()
 
 void Dg_ReturnPage::ShowExecuteWindow()
 {
-    Dg_ExecReturn *execReturn = new Dg_ExecReturn(this);
-    execReturn->show();
-    this->hide();
+    this->showMinimized();
+    Dg_Back_Exec *execReturn = new Dg_Back_Exec;
     resetSignal = HALTQUITPROCESS;//停止自动退出功能
     connect(execReturn, SIGNAL(destroyed()), this, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed(QObject*)), execReturn, SLOT(deleteLater()));
+
 }
 
 bool Dg_ReturnPage::WriteSelected2SQL(QTableWidget *source, QString table_name)

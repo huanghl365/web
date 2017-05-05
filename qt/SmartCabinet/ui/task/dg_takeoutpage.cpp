@@ -1,5 +1,6 @@
 #include "dg_takeoutpage.h"
-#include "ui/exec/dg_exectakeout.h"
+#include "ui/exec/dg_takeout_exec.h"
+#include "common/globalvariable.h"
 
 Dg_TakeOutPage::Dg_TakeOutPage()
 {
@@ -7,18 +8,17 @@ Dg_TakeOutPage::Dg_TakeOutPage()
     table_exec = "T_AgentiaExecute";
     table_sea = "T_AgentiaSaving";
 
-    _Main("取界面");
+    _Main("取出界面");
 }
 
 void Dg_TakeOutPage::ShowExecuteWindow()
 {
-    Dg_ExecTakeOut *execTakeOut = new Dg_ExecTakeOut(this);
-    execTakeOut->show();
-    this->hide();
-    resetSignal = HALTQUITPROCESS;//停止自动退出功能
+    this->showMinimized();
+    Dg_TakeOut_Exec *execTakeOut = new Dg_TakeOut_Exec;
 
+    resetSignal = HALTQUITPROCESS;//停止自动退出功能
     connect(execTakeOut, SIGNAL(destroyed()), this, SLOT(deleteLater()));
-    connect(this, SIGNAL(destroyed()), execTakeOut, SLOT(deleteLater()));
+    connect(this, SIGNAL(destroyed(QObject*)), execTakeOut, SLOT(deleteLater()));
 }
 
 void Dg_TakeOutPage::DownLoad_TaskList()
