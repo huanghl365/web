@@ -29,7 +29,6 @@ SOURCES += main.cpp \
     common/updatesql.cpp \
     common/commonmodel.cpp \
     ui/task/dg_returnpage.cpp \
-    ui/exec/dg_exectakeout.cpp \
     ui/exec/dg_execreturn.cpp \
     ui/task/dg_checkpage.cpp \
     ui/exec/dg_execcheck.cpp \
@@ -41,7 +40,8 @@ SOURCES += main.cpp \
     ui/task/dg_remove.cpp \
     ui/task/dg_scrap.cpp \
     ui/task/dg_replace.cpp \
-    common/serialportworking.cpp
+    common/serialportworking.cpp \
+    ui/exec/dg_exectakeout.cpp
 
 HEADERS  += \
     ui/common/dg_loginpage.h \

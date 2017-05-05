@@ -14,6 +14,7 @@ int main(int argc, char *argv[])
 
 
     Initprocess initStartProgress;
+
     //之后会讲配置信息重新改写
     initStartProgress.CreateSql();
     initStartProgress.ReadConfig();

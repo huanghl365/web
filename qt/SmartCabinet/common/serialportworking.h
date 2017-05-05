@@ -20,7 +20,7 @@ private slots:
     void Model_B();
     void ControlTimer(bool order);
     void CreateSerialPort();
-    void ARM_Request_LockStatus(int drawer_ID);
+
 private:
     NetCommunication *netCommunication;
     QTimer *timer;

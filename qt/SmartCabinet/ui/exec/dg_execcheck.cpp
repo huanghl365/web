@@ -60,9 +60,6 @@ Dg_ExecCheck::Dg_ExecCheck(QWidget *parent) :
     connect(this, SIGNAL(TaskCommand_Send2MCU(int,int)), \
             serialPortControl_G, SLOT(Model_A(int,int)));
 
-    connect(this, SIGNAL(Request_Lock(int)), \
-            serialPortControl_G, SLOT(ARM_Request_LockStatus(int)));
-
 
     All_Control();
 }
@@ -109,6 +106,7 @@ bool Dg_ExecCheck::All_Control()
                     else if (status == TASK_HAVENOTEXEC)
                     {
                         HandleTask(haveNotExecTask);
+
                         if (isPBjump && !Is_DrawerNo_Equal())
                             TextMessageShowContent("", "请关闭抽屉");
                         else if (isPBjump && Is_DrawerNo_Equal())
@@ -136,6 +134,7 @@ bool Dg_ExecCheck::All_Control()
                         break;
                     }
 
+                    waitTime(200);
                 }
                 if (0 == currentLockStatus)
                 {
@@ -143,7 +142,6 @@ bool Dg_ExecCheck::All_Control()
                         HandleTask(haveErrorHandle_CLOSE);
                 }
 
-                waitTime(500);
 
             }
 
@@ -156,6 +154,7 @@ bool Dg_ExecCheck::All_Control()
             GetError();//异常上报
             FlagInit();
             count++;
+            waitTime(200);
         }
 
         ShowCurrentAgentiaInfo(save_drawer.size());
@@ -290,7 +289,6 @@ void Dg_ExecCheck::ShowPage()
 
 void Dg_ExecCheck::Initiative_CheckLock()
 {
-    emit Request_Lock(save_drawer[count]);
     is_MCU_CompleteCheckLockStatus = false;
     while(!is_MCU_CompleteCheckLockStatus)
     {
@@ -681,6 +679,7 @@ void Dg_ExecCheck::TextMessageShowContent(QString colorType, QString content)
         ui->textB_message->setTextColor(Qt::black);
 
     ui->textB_message->setText(content);
+    waitTime(50);
 }
 
 void Dg_ExecCheck::isSaveError(int goal)
@@ -871,7 +870,7 @@ void Dg_ExecCheck::HandleTask(int order)
     }
     case havetaskOver:
     {
-        TextMessageShowContent("", "任务完成，正在执行上报，请稍候");
+//        TextMessageShowContent("", "任务完成，正在执行上报，请稍候");
         break;
     }
     case haveErrorHandle_CLOSE:

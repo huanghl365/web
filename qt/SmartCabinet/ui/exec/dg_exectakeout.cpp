@@ -24,10 +24,9 @@ Dg_ExecTakeOut::Dg_ExecTakeOut(QWidget *parent) :
     timer = new QTimer(this);
     agetiaInfo = new Save_AgentiaInfo;
 
-#ifndef TEST
-//    this->showFullScreen();
+#ifdef EXECUTESTATUS
+    this->showFullScreen();
 #endif
-
 
     //变量初始化
     InitializeStruct();

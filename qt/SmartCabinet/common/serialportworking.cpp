@@ -49,7 +49,7 @@ void SerialPortWorking::Model_A(int drawer_ID, int send_TaskNum)
         {
             Request_DrawerAlarm(drawer_ID);
             WaitTimer(200);
-            if (lockStaut_frequency > 4)
+            if (lockStaut_frequency > 5)
             {
                 if (LOCK_CURRENT_STATUS_CLOSE == Request_LockStatus(drawer_ID))
                 {
@@ -237,8 +237,4 @@ void SerialPortWorking::CreateSerialPort()
         is_OpenSerialPort = true;
 }
 
-void SerialPortWorking::ARM_Request_LockStatus(int drawer_ID)
-{
-    Request_LockStatus(drawer_ID);
-}
 
