@@ -21,7 +21,6 @@ SOURCES += main.cpp \
     network/netcommunication.cpp \
     common/delaytime.cpp \
     common/initprocess.cpp \
-    common/serialportcontrol.cpp \
     common/timerandupdate.cpp \
     common/uart4stm.cpp \
     common/waitingpage.cpp \
@@ -29,19 +28,15 @@ SOURCES += main.cpp \
     common/updatesql.cpp \
     common/commonmodel.cpp \
     ui/task/dg_returnpage.cpp \
-    ui/exec/dg_execreturn.cpp \
     ui/task/dg_checkpage.cpp \
-    ui/exec/dg_execcheck.cpp \
     ui/common/dg_requestposition.cpp \
     ui/task/dg_takein.cpp \
-    ui/exec/dg_exectakein.cpp \
     ui/task/dg_taskclass.cpp \
     ui/task/dg_takeoutpage.cpp \
     ui/task/dg_remove.cpp \
     ui/task/dg_scrap.cpp \
     ui/task/dg_replace.cpp \
     common/serialportworking.cpp \
-    ui/exec/dg_exectakeout.cpp \
     ui/exec/dg_execclass.cpp \
     ui/exec/dg_takeout_exec.cpp \
     ui/exec/dg_takein_exec.cpp \
@@ -58,7 +53,6 @@ HEADERS  += \
     network/netcommunication.h \
     common/delaytime.h \
     common/initprocess.h \
-    common/serialportcontrol.h \
     common/Sql_Setting.h \
     common/timerandupdate.h \
     common/uart4stm.h \
@@ -66,13 +60,9 @@ HEADERS  += \
     common/updatesql.h \
     common/commonmodel.h \
     ui/task/dg_returnpage.h \
-    ui/exec/dg_exectakeout.h \
-    ui/exec/dg_execreturn.h \
     ui/task/dg_checkpage.h \
-    ui/exec/dg_execcheck.h \
     ui/common/dg_requestposition.h \
     ui/task/dg_takein.h \
-    ui/exec/dg_exectakein.h \
     ui/task/dg_taskclass.h \
     ui/task/dg_takeoutpage.h \
     ui/task/dg_remove.h \

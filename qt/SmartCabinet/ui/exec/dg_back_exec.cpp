@@ -24,3 +24,8 @@ void Dg_Back_Exec::UploadTask2Server()
 {
     Back_TakeIn();
 }
+
+void Dg_Back_Exec::ShowPage()
+{
+    Show_BackTakeOut();
+}

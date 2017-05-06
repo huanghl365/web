@@ -13,6 +13,7 @@ public:
 
 private:
     void UploadTask2Server();
+    void ShowPage();
 };
 
 #endif // DG_BACK_EXEC_H

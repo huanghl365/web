@@ -12,6 +12,7 @@ public:
 
 private:
     void UploadTask2Server();
+    void ShowPage();
 };
 
 #endif // DG_TAKEIN_EXEC_H

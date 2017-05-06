@@ -66,91 +66,105 @@ Dg_ExecClass::~Dg_ExecClass()
 }
 
 /******************************/
-bool Dg_ExecClass::All_Control()
+void Dg_ExecClass::All_Control()
 {
     int status = -3;
     ControlTimer("close");
     ShowPage();
+
     if(CheckTable_haveData(tableName))
     {
         Control_GetDrawerInfo(modelOptional);
-        while (NextTask()&&isContinueExecute)
-        {
-            ShowCurrentAgentiaInfo(count);
-            Send_TaskCommandModelOptional(modelOptional);
-
-            if (CheckTask_isSendSuccess())
-            {
-                Initiative_CheckLock();
-                while (CheckLock_isOpen())
-                {
-                    status = CheckDrawerTaskStatus();
-
-                    if (status == TASK_ERROR)
-                    {
-                        HandleTask(haveErrorHandle);
-                    }
-                    else if (status == TASK_HAVENOTEXEC)
-                    {
-                        HandleTask(haveNotExecTask);
-
-                        if (isPBjump && !Is_DrawerNo_Equal())
-                            TextMessageShowContent("", "请关闭抽屉");
-                        else if (isPBjump && Is_DrawerNo_Equal())
-                        {
-                            isPBjump = false;
-                            break;
-                        }
-
-                    }
-                    else if (status == TASK_OVER)
-                    {
-                        HandleTask(havetaskOver);
-
-                        if (!Is_DrawerNo_Equal())
-                            TextMessageShowContent("", "请关闭抽屉");
-                        else
-                            break;
-                    }
-
-                    if (!isContinueExecute)
-                    {
-                        while(CheckLock_isOpen())
-                            TextMessageShowContent("", "请关闭抽屉");
-
-                        break;
-                    }
-
-                    waitTime(200);
-                }
-                if (0 == currentLockStatus)
-                {
-                    if (status == TASK_ERROR)
-                        HandleTask(haveErrorHandle_CLOSE);
-                }
-
-
-            }
-
-            if (status == TASK_HAVENOTEXEC)
-                HandleTask(haveNotExecTask_CLOSE);
-            else if (status == TASK_OVER)
-                HandleTask(havetaskOver_CLOSE);
-
-            ShowCurrentAgentiaInfo(count);
-            GetError();//异常上报
-            FlagInit();
-            count++;
-            waitTime(200);
-        }
-
-        ShowCurrentAgentiaInfo(save_drawer.size());
-
+        Exec_Task(status);
     }
 
+    UploadTask2Server();
+    //
+    waitTime(1000);
+    //
     ControlTimer("open");
     ClosePage();
     Change_SQL_Table("在位");
+}
+
+void Dg_ExecClass::Exec_Task(int &status)
+{
+    while (NextTask()&&isContinueExecute)
+    {
+        ShowCurrentAgentiaInfo(count);
+        Send_TaskCommandModelOptional(modelOptional);
+
+        if (CheckTask_isSendSuccess())
+        {
+            Initiative_CheckLock();
+            Scan_ShowMCUReply(status);
+        }
+
+        if (status == TASK_HAVENOTEXEC)
+            HandleTask(haveNotExecTask_CLOSE);
+        else if (status == TASK_OVER)
+            HandleTask(havetaskOver_CLOSE);
+
+        ShowCurrentAgentiaInfo(count);
+        GetError();//异常上报
+        FlagInit();
+        count++;
+        waitTime(100);
+    }
+
+    ShowCurrentAgentiaInfo(save_drawer.size());
+}
+
+void Dg_ExecClass::Scan_ShowMCUReply(int &status)
+{
+    while (CheckLock_isOpen())
+    {
+        status = CheckDrawerTaskStatus();
+
+        if (status == TASK_ERROR)
+        {
+            HandleTask(haveErrorHandle);
+        }
+        else if (status == TASK_HAVENOTEXEC)
+        {
+            if (!isPBjump)
+                HandleTask(haveNotExecTask);
+
+            if (isPBjump && !Is_DrawerNo_Equal())
+                TextMessageShowContent("", "请关闭抽屉");
+            else if (isPBjump && Is_DrawerNo_Equal())
+            {
+                isPBjump = false;
+                break;
+            }
+
+        }
+        else if (status == TASK_OVER)
+        {
+            HandleTask(havetaskOver);
+
+            if (!Is_DrawerNo_Equal())
+                TextMessageShowContent("", "请关闭抽屉");
+            else
+                break;
+        }
+
+        if (!isContinueExecute)
+        {
+            while(CheckLock_isOpen())
+                TextMessageShowContent("", "请关闭抽屉");
+
+            break;
+        }
+
+        waitTime(100);
+    }
+
+    if (0 == currentLockStatus)
+    {
+        if (status == TASK_ERROR)
+            HandleTask(haveErrorHandle_CLOSE);
+    }
 }
 
 /*****************************/
@@ -240,38 +254,7 @@ int Dg_ExecClass::CheckDrawerTaskStatus()
 /*****************************/
 void Dg_ExecClass::ShowPage()
 {
-    t_exec->setTable("T_AgentiaExecute");
-    t_exec->select();
 
-    t_exec->setHeaderData(0, Qt::Horizontal, QObject::tr("编号"));
-    t_exec->setHeaderData(1, Qt::Horizontal, QObject::tr("试剂名"));
-    t_exec->setHeaderData(2, Qt::Horizontal, QObject::tr("状态"));
-    t_exec->setHeaderData(5, Qt::Horizontal, QObject::tr("剩余容积"));
-    t_exec->setHeaderData(6, Qt::Horizontal, QObject::tr("抽屉号"));
-    t_exec->setHeaderData(7, Qt::Horizontal, QObject::tr("位置号"));
-
-    t_exec->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    t_exec->sort(4, Qt::AscendingOrder);
-
-    ui->TV_exec->setModel(t_exec);
-
-    ui->TV_exec->setColumnHidden(3,true);
-    ui->TV_exec->setColumnHidden(4,true);
-    ui->TV_exec->setColumnHidden(8,true);
-    ui->TV_exec->setColumnHidden(9,true);
-    ui->TV_exec->setColumnHidden(10,true);
-    ui->TV_exec->setColumnHidden(11,true);
-    ui->TV_exec->setColumnHidden(12,true);
-    ui->TV_exec->setColumnHidden(13,true);
-    ui->TV_exec->setColumnHidden(14,true);
-    ui->TV_exec->setColumnHidden(15,true);
-
-
-    ui->TV_exec->setSelectionMode(QAbstractItemView::NoSelection);
-    ui->TV_exec->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->TV_exec->horizontalHeader()->setDefaultAlignment(Qt::AlignCenter);
-    //降序
-    ui->TV_exec->sortByColumn(6, Qt::AscendingOrder);
 }
 
 void Dg_ExecClass::Initiative_CheckLock()
@@ -285,20 +268,34 @@ void Dg_ExecClass::Initiative_CheckLock()
 
 void Dg_ExecClass::ShowCurrentAgentiaInfo(int i)
 {
-    QString num = "";
-    if (i < save_number.size())
-        num = QString::number(save_number[i]);
-    else
-        num = "";
+    if (modelOptional == "Single")
+    {
+        QString num = "";
+        if (i < save_number.size())
+            num = QString::number(save_number[i]);
+        else
+            num = "";
 
-    t_exec->setFilter(QString("id like '%%1%'").arg(num));//筛选结果
+        t_exec->setFilter(QString("id like '%%1%'").arg(num));//筛选结果
+    }
+    else if (modelOptional == "Mul")
+    {
+        QString num = "";
+        if (i < save_drawer.size())
+            num = QString::number(save_drawer[i]);
+        else
+            num = "";
+
+        t_exec->setFilter(QString("drawerNo like '%%1%'").arg(num));//筛选结果
+
+    }
 }
 
 void Dg_ExecClass::Control_GetDrawerInfo(QString model)
 {
-    if (model == "Mul")
+    if (model == "Single")
         GetDrawerAndPosition_Singletaske();
-    else if (model == "Single")
+    else if (model == "Mul")
         GetDrawer();
 }
 //获取抽屉号和位置
@@ -613,7 +610,7 @@ void Dg_ExecClass::TextMessageShowContent(QString colorType, QString content)
         ui->textB_message->setTextColor(Qt::black);
 
     ui->textB_message->setText(content);
-    waitTime(50);
+    waitTime(100);
 }
 
 void Dg_ExecClass::isSaveError(int goal)
@@ -846,7 +843,109 @@ void Dg_ExecClass::HandleTask(int order)
         break;
     }
 }
+//show
+/***************************************/
+void Dg_ExecClass::Show_TakeIn()
+{
+    t_exec->setTable(QString("%1").arg(tableName));
+    t_exec->select();
 
+    t_exec->setHeaderData(0, Qt::Horizontal, QObject::tr("编号"));
+    t_exec->setHeaderData(1, Qt::Horizontal, QObject::tr("试剂名"));
+    t_exec->setHeaderData(2, Qt::Horizontal, QObject::tr("状态"));
+    t_exec->setHeaderData(3, Qt::Horizontal, QObject::tr("抽屉号"));
+    t_exec->setHeaderData(4, Qt::Horizontal, QObject::tr("位置号"));
+    t_exec->setHeaderData(6, Qt::Horizontal, QObject::tr("剩余容积"));
+
+    t_exec->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    t_exec->sort(4, Qt::AscendingOrder);
+
+    ui->TV_exec->setModel(t_exec);
+
+//    ui->TV_exec->setColumnHidden(5,true);
+//    ui->TV_exec->setColumnHidden(7,true);
+//    ui->TV_exec->setColumnHidden(8,true);
+//    ui->TV_exec->setColumnHidden(9,true);
+
+    ui->TV_exec->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->TV_exec->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->TV_exec->horizontalHeader()->setDefaultAlignment(Qt::AlignCenter);
+    ui->TV_exec->sortByColumn(s_drawerColumn, Qt::AscendingOrder);
+}
+
+void Dg_ExecClass::Show_TakeOut()
+{
+    t_exec->setTable(QString("%1").arg(tableName));
+    t_exec->select();
+
+    t_exec->setHeaderData(0, Qt::Horizontal, QObject::tr("编号"));
+    t_exec->setHeaderData(1, Qt::Horizontal, QObject::tr("试剂名"));
+    t_exec->setHeaderData(2, Qt::Horizontal, QObject::tr("状态"));
+    t_exec->setHeaderData(5, Qt::Horizontal, QObject::tr("剩余容积"));
+    t_exec->setHeaderData(6, Qt::Horizontal, QObject::tr("抽屉号"));
+    t_exec->setHeaderData(7, Qt::Horizontal, QObject::tr("位置号"));
+
+    t_exec->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    t_exec->sort(4, Qt::AscendingOrder);
+
+    ui->TV_exec->setModel(t_exec);
+
+    ui->TV_exec->setColumnHidden(3,true);
+    ui->TV_exec->setColumnHidden(4,true);
+    ui->TV_exec->setColumnHidden(8,true);
+    ui->TV_exec->setColumnHidden(9,true);
+    ui->TV_exec->setColumnHidden(10,true);
+    ui->TV_exec->setColumnHidden(11,true);
+    ui->TV_exec->setColumnHidden(12,true);
+    ui->TV_exec->setColumnHidden(13,true);
+    ui->TV_exec->setColumnHidden(14,true);
+    ui->TV_exec->setColumnHidden(15,true);
+
+
+    ui->TV_exec->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->TV_exec->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->TV_exec->horizontalHeader()->setDefaultAlignment(Qt::AlignCenter);
+    //降序
+    ui->TV_exec->sortByColumn(6, Qt::AscendingOrder);
+}
+
+void Dg_ExecClass::Show_BackTakeOut()
+{
+    t_exec->setTable(QString("%1").arg(tableName));
+    t_exec->select();
+
+    t_exec->setHeaderData(0, Qt::Horizontal, QObject::tr("编号"));
+    t_exec->setHeaderData(1, Qt::Horizontal, QObject::tr("试剂名"));
+    t_exec->setHeaderData(2, Qt::Horizontal, QObject::tr("状态"));
+    t_exec->setHeaderData(5, Qt::Horizontal, QObject::tr("剩余容积"));
+    t_exec->setHeaderData(6, Qt::Horizontal, QObject::tr("抽屉号"));
+    t_exec->setHeaderData(7, Qt::Horizontal, QObject::tr("位置号"));
+
+    t_exec->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    t_exec->sort(4, Qt::AscendingOrder);
+
+    ui->TV_exec->setModel(t_exec);
+
+    ui->TV_exec->setColumnHidden(3,true);
+    ui->TV_exec->setColumnHidden(4,true);
+    ui->TV_exec->setColumnHidden(8,true);
+    ui->TV_exec->setColumnHidden(9,true);
+    ui->TV_exec->setColumnHidden(10,true);
+    ui->TV_exec->setColumnHidden(11,true);
+    ui->TV_exec->setColumnHidden(12,true);
+    ui->TV_exec->setColumnHidden(13,true);
+    ui->TV_exec->setColumnHidden(14,true);
+    ui->TV_exec->setColumnHidden(15,true);
+
+    ui->TV_exec->setSelectionMode(QAbstractItemView::NoSelection);
+    ui->TV_exec->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->TV_exec->horizontalHeader()->setDefaultAlignment(Qt::AlignCenter);
+    ui->TV_exec->sortByColumn(6, Qt::AscendingOrder);
+
+}
+
+/***************************************/
+//upload database
 void Dg_ExecClass::TakeOut()
 {
     QString json_str = "";
@@ -915,7 +1014,6 @@ void Dg_ExecClass::TakeOut()
             }
         }
     }
-    TextMessageShowContent("", "请退出");
 }
 
 void Dg_ExecClass::New_TakeIn()
@@ -992,7 +1090,6 @@ void Dg_ExecClass::New_TakeIn()
             }
         }
     }
-    TextMessageShowContent("", "请退出");
 }
 
 void Dg_ExecClass::Back_TakeIn()
@@ -1066,5 +1163,4 @@ void Dg_ExecClass::Back_TakeIn()
             }
         }
     }
-    TextMessageShowContent("", "请退出");
 }

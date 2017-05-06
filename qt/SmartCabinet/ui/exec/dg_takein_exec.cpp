@@ -9,7 +9,8 @@ Dg_TakeIn_Exec::Dg_TakeIn_Exec()
     s_judgeStatusColumn = 2;
     s_doseColumn = 6;
     s_orderColumn = 0;
-    s_nameColumn = 0;
+    s_nameColumn = 1;
+    s_agetiaTypeIdColumn = 8;
     s_agetiaIdColumn = 8;
     s_positionIdColumn = 9;
 
@@ -24,4 +25,9 @@ Dg_TakeIn_Exec::Dg_TakeIn_Exec()
 void Dg_TakeIn_Exec::UploadTask2Server()
 {
     New_TakeIn();
+}
+
+void Dg_TakeIn_Exec::ShowPage()
+{
+    Show_TakeIn();
 }

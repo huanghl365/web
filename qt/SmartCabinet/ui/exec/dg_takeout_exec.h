@@ -11,6 +11,7 @@ public:
 
 private:
     void UploadTask2Server();
+    void ShowPage();
 
 };
 

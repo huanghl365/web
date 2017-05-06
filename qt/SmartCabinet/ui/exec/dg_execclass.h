@@ -49,13 +49,15 @@ protected:
     //设置标题
     void SetTitle(QString name);
     //程序总控
-    bool All_Control();
-    //上报任务信息
-    virtual void UploadTask2Server();
+    void All_Control();
     //各个任务不同上报格式
     void TakeOut();
     void New_TakeIn();
     void Back_TakeIn();
+    //显示格式
+    void Show_TakeIn();
+    void Show_TakeOut();
+    void Show_BackTakeOut();
 private:
     Ui::Dg_ExecClass *ui;
     QSqlTableModel *t_exec;
@@ -100,7 +102,10 @@ private:
     //任务状况
     int CheckDrawerTaskStatus();
     //显示界面，排序
-    void ShowPage();
+    virtual void ShowPage();
+    //上报任务信息
+    virtual void UploadTask2Server();
+
     //显示任务信息
     void ShowCurrentAgentiaInfo(int i);
     //获取位置号
@@ -151,6 +156,10 @@ private:
     void HandleTask(int order);
     //初始化标志位
     void FlagInit();
+    //显示反馈
+    void Scan_ShowMCUReply(int &status);
+    //执行任务
+    void Exec_Task(int &status);
 
 
 

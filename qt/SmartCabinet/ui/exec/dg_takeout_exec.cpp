@@ -9,8 +9,7 @@ Dg_TakeOut_Exec::Dg_TakeOut_Exec()
     s_nameColumn = 1;
     s_agetiaIdColumn = 10;
     s_positionIdColumn = 11;
-    s_orderColumn = 0;
-    s_doseColumn = 5;
+
 
 
     tableName = "T_AgentiaExecute";//T_AgentiaExecute
@@ -23,4 +22,9 @@ Dg_TakeOut_Exec::Dg_TakeOut_Exec()
 void Dg_TakeOut_Exec::UploadTask2Server()
 {
     TakeOut();
+}
+
+void Dg_TakeOut_Exec::ShowPage()
+{
+    Show_TakeOut();
 }

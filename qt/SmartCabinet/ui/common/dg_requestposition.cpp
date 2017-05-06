@@ -14,6 +14,7 @@ Dg_RequestPosition::Dg_RequestPosition(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dg_RequestPosition)
 {
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     ui->setupUi(this);
     apply_netcommunication = new NetCommunication(this);
 

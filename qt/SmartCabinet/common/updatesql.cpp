@@ -361,7 +361,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
                                           positionId) values (?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(save_num);
                     query.addBindValue(s_str[3]);
-                    query.addBindValue(QString("已审批"));
+                    query.addBindValue(QString("审批"));
                     query.addBindValue(s_int[5]);
                     query.addBindValue(s_int[6]);
                     query.addBindValue(QString(""));
@@ -381,7 +381,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
                                                                               ?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
-                    query.addBindValue(QString("已审批"));
+                    query.addBindValue(QString("审批"));
                     query.addBindValue(QString(""));
                     query.addBindValue(s_str[4]);
                     query.addBindValue(s_int[5]);
@@ -400,7 +400,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
                             values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
-                    query.addBindValue(QString("已审批"));
+                    query.addBindValue(QString("审批"));
                     query.addBindValue(QString(""));
                     query.addBindValue(s_str[4]);
                     query.addBindValue(s_int[5]);
@@ -419,7 +419,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
                                   agentiaId,positionId) values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
-                    query.addBindValue(QString("已审批"));
+                    query.addBindValue(QString("审批"));
                     query.addBindValue(QString(""));
                     query.addBindValue(s_str[8]);
                     query.addBindValue(newTime);
@@ -438,7 +438,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
                                   agentiaId,positionId) values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
-                    query.addBindValue(QString("已审批"));
+                    query.addBindValue(QString("审批"));
                     query.addBindValue(QString(""));
                     query.addBindValue(s_str[4]);
                     query.addBindValue(s_int[5]);
@@ -457,7 +457,7 @@ bool UpdateSQL::UnpackTaskList(QJsonDocument jd, int taskType)
                                   agentiaId,positionId) values (?,?,?,?,?,?,?,?,?,?,?)");
                     query.addBindValue(i+1);
                     query.addBindValue(s_str[3]);
-                    query.addBindValue(QString("已审批"));
+                    query.addBindValue(QString("审批"));
                     query.addBindValue(QString(""));
                     query.addBindValue(s_str[4]);
                     query.addBindValue(newTime);

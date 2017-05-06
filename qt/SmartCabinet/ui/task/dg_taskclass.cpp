@@ -39,8 +39,8 @@ Dg_TaskClass::~Dg_TaskClass()
 
 void Dg_TaskClass::_Main(QString pageName)
 {
-    DownLoad_TaskList();
     SetTitle(pageName);
+    DownLoad_TaskList();
     ShowUI();
     ShowSQL();
 }
