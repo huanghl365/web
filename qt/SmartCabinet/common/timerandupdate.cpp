@@ -12,7 +12,7 @@ TimerAndUpdate::TimerAndUpdate(QObject *parent) :
     timeCount_returnAndUpdate = 0;
     timeCount_sendNeedInfo = 0;
 
-    SetTimer(10000);
+    SetTimer(5000);
 
     connect(timer_10s, SIGNAL(timeout()), this, SLOT(dealTask()));
     connect(accessManager, SIGNAL(finished(QNetworkReply*)), this,\

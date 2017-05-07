@@ -28,5 +28,5 @@ void Dg_TakeOutPage::DownLoad_TaskList()
     query.exec(QString("DELETE from %1").arg(table_exec));
 
     updateSQL->GetAllAgentia(&userId);
-    updateSQL->GetTaskList(&userId, -1);
+    updateSQL->GetTaskList(&userId, TASKTYPE_TAKEOUT);
 }

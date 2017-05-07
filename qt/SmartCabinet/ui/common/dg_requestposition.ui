@@ -28,8 +28,8 @@
         <widget class="QGroupBox" name="groupBox">
          <property name="font">
           <font>
-           <family>Agency FB</family>
-           <pointsize>12</pointsize>
+           <family>Sans Serif</family>
+           <pointsize>22</pointsize>
           </font>
          </property>
          <property name="title">
@@ -52,7 +52,14 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QTextBrowser" name="TB_info"/>
+           <widget class="QTextBrowser" name="TB_info">
+            <property name="font">
+             <font>
+              <family>Sans Serif</family>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -121,6 +128,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <widget class="QLabel" name="label">
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>抽屉号：</string>
                </property>
@@ -133,6 +145,14 @@
                  <width>200</width>
                  <height>0</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 206, 126);</string>
                </property>
                <item>
                 <property name="text">
@@ -195,6 +215,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
               <widget class="QLabel" name="label_2">
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>失效日期：</string>
                </property>
@@ -207,6 +232,11 @@
                  <width>200</width>
                  <height>40</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
                </property>
               </widget>
              </item>
@@ -229,6 +259,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <item>
               <widget class="QLabel" name="label_3">
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>额定容积：</string>
                </property>
@@ -238,9 +273,20 @@
               <widget class="QLineEdit" name="lE_bottle">
                <property name="minimumSize">
                 <size>
-                 <width>0</width>
-                 <height>40</height>
+                 <width>50</width>
+                 <height>50</height>
                 </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
                </property>
               </widget>
              </item>
@@ -251,6 +297,11 @@
                  <width>30</width>
                  <height>0</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
                </property>
                <property name="text">
                 <string>ML</string>
@@ -276,6 +327,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
               <widget class="QLabel" name="label_4">
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>实际容积：</string>
                </property>
@@ -289,6 +345,11 @@
                  <height>40</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
+               </property>
               </widget>
              </item>
              <item>
@@ -298,6 +359,11 @@
                  <width>30</width>
                  <height>0</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
                </property>
                <property name="text">
                 <string>ML</string>
@@ -344,6 +410,14 @@
                <height>40</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <pointsize>26</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(117, 255, 216);</string>
+             </property>
              <property name="text">
               <string>申请</string>
              </property>
@@ -369,6 +443,14 @@
                <width>100</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>26</pointsize>
+              </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(117, 255, 216);</string>
              </property>
              <property name="text">
               <string>返回</string>

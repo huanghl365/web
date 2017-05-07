@@ -75,7 +75,9 @@ void Dg_TakeIn::on_pB_apply_clicked()
         if (be != row)
         {
 
-            Dg_RequestPosition *requestPage = new Dg_RequestPosition(this);
+            Dg_RequestPosition *requestPage = new Dg_RequestPosition;
+            connect(this, SIGNAL(destroyed(QObject*)), requestPage, SLOT(deleteLater()));
+
             QString agentiaName = ui->TW_Sea->item(row, 1)->text();
             QString agentiaUnit = ui->TW_Sea->item(row, 4)->text();
             QString aUnit = QString(agentiaUnit[agentiaUnit.length()-1]);
@@ -117,6 +119,7 @@ void Dg_TakeIn::AcceptPositionInfo(int positionNo, int positionId,\
     ui->TW_Exec->setRowCount(rowCount + 1);
 
     QTableWidgetItem *test = new QTableWidgetItem();//插入整型
+
     int integer = ui->TW_Exec->rowCount();
     qDebug()<<integer;
     test->setData(Qt::DisplayRole, integer);

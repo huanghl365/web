@@ -82,12 +82,8 @@ FORMS    += \
     ui/common/dg_loginpage.ui \
     ui/common/dg_functionoptpage.ui \
     ui/task/dg_returnpage.ui \
-    ui/exec/dg_exectakeout.ui \
-    ui/exec/dg_execreturn.ui \
-    ui/exec/dg_execcheck.ui \
     ui/common/dg_requestposition.ui \
     ui/task/dg_takein.ui \
-    ui/exec/dg_exectakein.ui \
     ui/task/dg_taskclass.ui \
     ui/exec/dg_execclass.ui
 

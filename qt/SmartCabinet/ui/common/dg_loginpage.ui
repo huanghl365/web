@@ -6,40 +6,49 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>951</width>
-    <height>561</height>
+    <width>698</width>
+    <height>614</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>0</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <layout class="QHBoxLayout" name="horizontalLayout_5">
      <item>
-      <spacer name="verticalSpacer_4">
+      <spacer name="horizontalSpacer_4">
        <property name="orientation">
-        <enum>Qt::Vertical</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>40</height>
+         <width>40</width>
+         <height>20</height>
         </size>
        </property>
       </spacer>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <spacer name="horizontalSpacer_4">
+        <spacer name="verticalSpacer_4">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -67,8 +76,8 @@
               <widget class="QLabel" name="label">
                <property name="font">
                 <font>
-                 <family>Agency FB</family>
-                 <pointsize>26</pointsize>
+                 <family>Sans Serif</family>
+                 <pointsize>48</pointsize>
                 </font>
                </property>
                <property name="text">
@@ -108,6 +117,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
               <widget class="QLabel" name="label_2">
+               <property name="font">
+                <font>
+                 <pointsize>28</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>账号：</string>
                </property>
@@ -120,6 +134,11 @@
                  <width>200</width>
                  <height>50</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>20</pointsize>
+                </font>
                </property>
                <property name="text">
                 <string>admin</string>
@@ -148,6 +167,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <item>
               <widget class="QLabel" name="label_3">
+               <property name="font">
+                <font>
+                 <pointsize>28</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>密码：</string>
                </property>
@@ -160,6 +184,11 @@
                  <width>200</width>
                  <height>50</height>
                 </size>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>11</pointsize>
+                </font>
                </property>
                <property name="text">
                 <string>123456</string>
@@ -177,20 +206,36 @@
           </layout>
          </item>
          <item>
+          <spacer name="verticalSpacer_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
            <item>
             <widget class="QPushButton" name="pB_quit">
              <property name="minimumSize">
               <size>
-               <width>100</width>
-               <height>50</height>
+               <width>150</width>
+               <height>80</height>
               </size>
              </property>
              <property name="font">
               <font>
-               <family>Agency FB</family>
-               <pointsize>14</pointsize>
+               <family>Sans Serif</family>
+               <pointsize>36</pointsize>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(209, 255, 196);</string>
              </property>
              <property name="text">
               <string>退出</string>
@@ -214,15 +259,18 @@
             <widget class="QPushButton" name="pB_login">
              <property name="minimumSize">
               <size>
-               <width>100</width>
-               <height>50</height>
+               <width>150</width>
+               <height>80</height>
               </size>
              </property>
              <property name="font">
               <font>
-               <family>Agency FB</family>
-               <pointsize>14</pointsize>
+               <family>Sans Serif</family>
+               <pointsize>36</pointsize>
               </font>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">background-color: rgb(209, 255, 196);</string>
              </property>
              <property name="text">
               <string>登录</string>
@@ -231,17 +279,30 @@
            </item>
           </layout>
          </item>
+         <item>
+          <spacer name="verticalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
        <item>
-        <spacer name="horizontalSpacer_5">
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>40</width>
-           <height>20</height>
+           <width>20</width>
+           <height>40</height>
           </size>
          </property>
         </spacer>
@@ -249,14 +310,14 @@
       </layout>
      </item>
      <item>
-      <spacer name="verticalSpacer_3">
+      <spacer name="horizontalSpacer_5">
        <property name="orientation">
-        <enum>Qt::Vertical</enum>
+        <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>20</width>
-         <height>40</height>
+         <width>40</width>
+         <height>20</height>
         </size>
        </property>
       </spacer>
@@ -265,6 +326,8 @@
    </item>
   </layout>
   <zorder></zorder>
+  <zorder>verticalSpacer_5</zorder>
+  <zorder>verticalSpacer_6</zorder>
  </widget>
  <resources/>
  <connections/>
