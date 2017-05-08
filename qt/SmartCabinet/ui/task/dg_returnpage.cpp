@@ -14,8 +14,9 @@ Dg_ReturnPage::Dg_ReturnPage(QWidget *parent) :
 #ifndef TEST
     this->showFullScreen();
 #endif
-
+    ui->CB_return->setEnabled(false);
     DownLoad_TaskList();
+    ui->CB_return->setEnabled(true);
     ShowGUI();
 }
 

@@ -40,6 +40,7 @@ private:
     void OpenMainOptPage(QString usrName, int &user_id, int &user_role);
     bool QuerySQL(const QString &account, const QString &passwd, int &user_Id, int &user_role);
     void mousePressEvent(QMouseEvent *event);
+    void GetVersion();
 
 };
 

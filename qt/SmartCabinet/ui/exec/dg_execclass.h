@@ -50,6 +50,7 @@ protected:
     void SetTitle(QString name);
     //程序总控
     void All_Control();
+    void IsChangeInfo(QString model);
     //各个任务不同上报格式
     void TakeOut();
     void New_TakeIn();

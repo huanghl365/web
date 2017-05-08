@@ -18,6 +18,7 @@ Dg_TakeIn_Exec::Dg_TakeIn_Exec()
 
     tableName = "T_PutInExec";
     modelOptional = "Single";
+    IsChangeInfo("notchange");
     SetTitle("入柜操作");
     All_Control();
 }

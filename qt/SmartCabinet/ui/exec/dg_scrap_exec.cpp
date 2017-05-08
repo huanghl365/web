@@ -2,7 +2,7 @@
 
 Dg_Scrap_Exec::Dg_Scrap_Exec()
 {
-
+    this->showFullScreen();
     //定义对应列表列数
     s_drawerColumn = 6;
     s_positioinColumn = 7;
@@ -16,6 +16,8 @@ Dg_Scrap_Exec::Dg_Scrap_Exec()
 
     tableName = "T_AgentiaExecute";//T_AgentiaExecute
     modelOptional = "Mul";
+    IsChangeInfo("notchange");
+
     SetTitle("报废操作");
 
     All_Control();

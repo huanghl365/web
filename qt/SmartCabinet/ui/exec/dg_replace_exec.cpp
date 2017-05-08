@@ -2,6 +2,8 @@
 
 Dg_Replace_Exec::Dg_Replace_Exec()
 {
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    showMaximized();
 
     //定义对应列表列数
     s_drawerColumn = 6;
@@ -16,6 +18,7 @@ Dg_Replace_Exec::Dg_Replace_Exec()
 
     tableName = "T_AgentiaExecute";//T_AgentiaExecute
     modelOptional = "Mul";
+    IsChangeInfo("needchange");
     SetTitle("替换操作");
 
     All_Control();

@@ -16,8 +16,8 @@
 
 static bool createConnection()
 {
-    QSqlDatabase::removeDatabase("QSQLITE");//删除数据库
-    QFile::remove("SmartCabinet.db");//删除数据库文件
+//    QSqlDatabase::removeDatabase("QSQLITE");//删除数据库
+//    QFile::remove("SmartCabinet.db");//删除数据库文件
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName("SmartCabinet.db");
@@ -25,7 +25,7 @@ static bool createConnection()
     QSqlQuery query;
 
     query.exec(QString("create table T_Version ([versionNo] varchar, [cabinetID] varchar)"));
-    query.exec(QString("insert into T_Version values ('1.0.0','AABBCCDD')"));
+    query.exec(QString("insert into T_Version values ('V1.0.0','AABBCCDD')"));
 
     query.exec(QString("create table T_temporary ([versionNo] varchar, [address] varchar)"));
 

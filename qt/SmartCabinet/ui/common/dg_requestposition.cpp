@@ -15,6 +15,7 @@ Dg_RequestPosition::Dg_RequestPosition(QWidget *parent) :
     ui(new Ui::Dg_RequestPosition)
 {
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    this->showMaximized();
     ui->setupUi(this);
     apply_netcommunication = new NetCommunication(this);
 
@@ -96,10 +97,12 @@ void Dg_RequestPosition::on_pB_apply_clicked()
         {
             QMessageBox::warning(NULL, "Error", QStringLiteral("请重选抽屉"));
         }
+
+        this->deleteLater();
     }
     else
     {
         QMessageBox::warning(NULL, "Error", QStringLiteral("网络异常，请稍后再试"));
+        this->deleteLater();
     }
-    this->deleteLater();
 }

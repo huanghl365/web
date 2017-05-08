@@ -34,7 +34,7 @@
             </font>
            </property>
            <property name="text">
-            <string>退出</string>
+            <string>返回</string>
            </property>
           </widget>
          </item>
@@ -120,7 +120,13 @@
            <number>0</number>
           </property>
           <item row="0" column="0">
-           <widget class="QTableView" name="TV_exec"/>
+           <widget class="QTableView" name="TV_exec">
+            <property name="font">
+             <font>
+              <pointsize>16</pointsize>
+             </font>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>

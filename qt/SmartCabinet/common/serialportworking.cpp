@@ -48,7 +48,7 @@ void SerialPortWorking::Model_A(int drawer_ID, int send_TaskNum)
         while (isContinueExecute_S)
         {
             Request_DrawerAlarm(drawer_ID);
-            WaitTimer(50);
+            WaitTimer(100);
             if (lockStaut_frequency > 5)
             {
                 if (LOCK_CURRENT_STATUS_CLOSE == Request_LockStatus(drawer_ID))

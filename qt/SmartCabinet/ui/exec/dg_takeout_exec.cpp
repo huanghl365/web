@@ -2,6 +2,8 @@
 
 Dg_TakeOut_Exec::Dg_TakeOut_Exec()
 {
+    this->showFullScreen();
+
     //定义对应列表列数
     s_drawerColumn = 6;
     s_positioinColumn = 7;
@@ -14,6 +16,8 @@ Dg_TakeOut_Exec::Dg_TakeOut_Exec()
 
     tableName = "T_AgentiaExecute";//T_AgentiaExecute
     modelOptional = "Mul";
+    IsChangeInfo("norchange");
+
     SetTitle("取出操作");
 
     All_Control();
@@ -28,3 +32,4 @@ void Dg_TakeOut_Exec::ShowPage()
 {
     Show_TakeOut();
 }
+

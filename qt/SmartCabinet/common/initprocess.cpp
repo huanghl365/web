@@ -89,21 +89,21 @@ bool Initprocess::Upgrade()
     QString json_str = network->PackageJson_version(CABINETNO);
     if (network->PostHttp("version", json_str, 2))
     {
-        if (UnpackVersion(network->ServerReply, &armVersion, &armUrl))
-        {
-            if(armVersion != VERSION)
-            {
-                int ret = QMessageBox::warning(NULL,tr("更新"), tr("是否立即更新?"), \
-                                               QMessageBox::Ok , QMessageBox::No);
-                if (ret == QMessageBox::Ok)
-                {
-                    QProcess *proe = new QProcess;
-                    proe->startDetached("./untitled4");
-                    this->deleteLater();
-                    return false;
-                }
-            }
-        }
+//        if (UnpackVersion(network->ServerReply, &armVersion, &armUrl))
+//        {
+//            if(armVersion != VERSION)
+//            {
+//                int ret = QMessageBox::warning(NULL,tr("更新"), tr("是否立即更新?"), \
+//                                               QMessageBox::Ok , QMessageBox::No);
+//                if (ret == QMessageBox::Ok)
+//                {
+//                    QProcess *proe = new QProcess;
+//                    proe->startDetached("./home/pi/Desktop/AutoDownload");
+//                    this->deleteLater();
+//                    return false;
+//                }
+//            }
+//        }
     }
     return true;
 }

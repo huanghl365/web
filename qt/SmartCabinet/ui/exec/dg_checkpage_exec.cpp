@@ -2,6 +2,7 @@
 
 Dg_CheckPage_Exec::Dg_CheckPage_Exec()
 {
+    this->showFullScreen();
     //定义对应列表列数
     s_drawerColumn = 6;
     s_positioinColumn = 7;
@@ -15,6 +16,8 @@ Dg_CheckPage_Exec::Dg_CheckPage_Exec()
 
     tableName = "T_AgentiaExecute";//T_AgentiaExecute
     modelOptional = "Mul";
+
+    IsChangeInfo("notchange");
     SetTitle("点验操作");
 
     All_Control();

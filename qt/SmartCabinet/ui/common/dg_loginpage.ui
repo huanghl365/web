@@ -86,6 +86,19 @@
               </widget>
              </item>
              <item>
+              <widget class="QLabel" name="lB_Version">
+               <property name="layoutDirection">
+                <enum>Qt::LeftToRight</enum>
+               </property>
+               <property name="text">
+                <string>V1.0.0</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+               </property>
+              </widget>
+             </item>
+             <item>
               <spacer name="horizontalSpacer_2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -326,8 +339,6 @@
    </item>
   </layout>
   <zorder></zorder>
-  <zorder>verticalSpacer_5</zorder>
-  <zorder>verticalSpacer_6</zorder>
  </widget>
  <resources/>
  <connections/>

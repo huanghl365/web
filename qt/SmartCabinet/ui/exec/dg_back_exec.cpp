@@ -2,7 +2,8 @@
 
 Dg_Back_Exec::Dg_Back_Exec()
 {
-    this->showFullScreen();
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    showMaximized();
     //定义对应列表列数
     s_drawerColumn = 6;
     s_positioinColumn = 7;
@@ -16,6 +17,7 @@ Dg_Back_Exec::Dg_Back_Exec()
 
     tableName = "T_AgentiaReturnExecute";
     modelOptional = "Single";
+    IsChangeInfo("needchange");
     SetTitle("归还操作");
     All_Control();
 }

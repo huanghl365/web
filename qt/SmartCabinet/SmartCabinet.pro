@@ -91,6 +91,6 @@ RESOURCES += \
     resource/resoure.qrc
 
 
-target.path = /home/pi/test
+target.path = /home/pi/Desktop
 INSTALLS += target
 #include($$PWD/inputnew/inputnew.pri)

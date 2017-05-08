@@ -8,7 +8,7 @@ Dg_TakeOutPage::Dg_TakeOutPage()
     table_exec = "T_AgentiaExecute";
     table_sea = "T_AgentiaSaving";
 
-    _Main("取出界面");
+    _Main("取用界面");
 }
 
 void Dg_TakeOutPage::ShowExecuteWindow()

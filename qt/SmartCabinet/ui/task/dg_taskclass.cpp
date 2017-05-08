@@ -39,11 +39,15 @@ Dg_TaskClass::~Dg_TaskClass()
 
 void Dg_TaskClass::_Main(QString pageName)
 {
-    SetTitle(pageName);
-    DownLoad_TaskList();
-    ShowUI();
-    ShowSQL();
+        SetTitle(pageName);
+        ui->CB_return->setEnabled(false);
+        DownLoad_TaskList();
+        ShowUI();
+        ShowSQL();
+        ui->CB_return->setEnabled(true);
+
 }
+
 
 void Dg_TaskClass::on_CB_return_clicked()
 {

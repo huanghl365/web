@@ -17,7 +17,7 @@ Dg_ExecClass::Dg_ExecClass(QWidget *parent) :
     ui(new Ui::Dg_ExecClass)
 {
     ui->setupUi(this);
-    this->showFullScreen();
+//    this->showFullScreen();
 
     t_exec = new QSqlTableModel();
     query = new QSqlQuery;
@@ -68,6 +68,7 @@ Dg_ExecClass::~Dg_ExecClass()
 /******************************/
 void Dg_ExecClass::All_Control()
 {
+    resetSignal = HALTQUITPROCESS;
     int status = -3;
     ControlTimer("close");
     ShowPage();
@@ -1162,5 +1163,23 @@ void Dg_ExecClass::Back_TakeIn()
                 WriteSQL_NetworkError();
             }
         }
+    }
+}
+
+void Dg_ExecClass::IsChangeInfo(QString model)
+{
+    if (model == "notchange")
+    {
+        ui->lB_volum->hide();
+        ui->lE_volum->hide();
+        ui->pB_sure->hide();
+        ui->CB_unit->hide();
+    }
+    else if (model == "needchange")
+    {
+        ui->lB_volum->show();
+        ui->lE_volum->show();
+        ui->pB_sure->show();
+        ui->CB_unit->show();
     }
 }

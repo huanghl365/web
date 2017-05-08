@@ -12,7 +12,6 @@ public:
 private:
     void UploadTask2Server();
     void ShowPage();
-
 };
 
 #endif // DG_TAKEOUT_EXEC_H

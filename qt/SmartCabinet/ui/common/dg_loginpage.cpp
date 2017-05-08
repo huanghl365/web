@@ -15,15 +15,26 @@ Dg_LoginPage::Dg_LoginPage(QWidget *parent) :
     is_open = false;
     netWork = new NetCommunication(this);
 #ifndef TEST
-      setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-      showMaximized();
+    setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    showMaximized();
 #endif
+
+    GetVersion();
 
 }
 
 Dg_LoginPage::~Dg_LoginPage()
 {
     delete ui;
+}
+
+void Dg_LoginPage::GetVersion()
+{
+    QSqlQuery *query = new QSqlQuery;
+    query->exec(QString("select * from T_Version"));
+    query->last();
+    QString version = query->value(0).toString();
+    ui->lB_Version->setText(version);
 }
 
 void Dg_LoginPage::on_pB_login_clicked()
